@@ -189,7 +189,7 @@ if __name__ == "__main__":
         pass
     
     parser = argparse.ArgumentParser(description="Render 2D node map for a distribution network instance")
-    parser.add_argument("--instance", type=str, default="2026 usecase/data/medium_35pl/instance_medium_35pl.json", help="Path to instance JSON file")
+    parser.add_argument("--instance", type=str, default="/Users/starryovo/Desktop/M2S1/optimization-case-study/data/toy_2pl/instance_toy_2pl.json", help="Path to instance JSON file")
     parser.add_argument("--output", type=str, default=None, help="Save path for PNG image")
     parser.add_argument("--show", action="store_true", help="Open interactive matplotlib window")
 
