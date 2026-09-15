@@ -1,0 +1,113 @@
+{
+  "metadata": {
+    "title": "Test Instance · Minimal Toy (1 DP, 1 DS, 2 PL)",
+    "name": "instance_toy_2pl",
+    "description": "Minimal pedagogical test instance to verify JSON schema, authenticate against the API, and validate hand calculations.",
+    "counts": {
+      "num_dp": 1,
+      "num_ds": 1,
+      "num_pl": 2,
+      "total_nodes": 4
+    },
+    "total_nodes": 4,
+    "delivery_points_count": 2,
+    "total_delivery_demand": 25,
+    "total_pickup_demand": 5
+  },
+  "nodes": [
+    {
+      "id": "DP_1",
+      "type": "DP",
+      "name": "Main Central Warehouse",
+      "x": 10.0,
+      "y": 20.0,
+      "demand": 0,
+      "pickup": 0,
+      "tw_open": 360,
+      "tw_close": 1200,
+      "service_time": 30
+    },
+    {
+      "id": "DS_1",
+      "type": "DS",
+      "name": "Urban Secondary Hub",
+      "x": 30.0,
+      "y": 20.0,
+      "demand": 0,
+      "pickup": 0,
+      "tw_open": 420,
+      "tw_close": 1140,
+      "service_time": 25
+    },
+    {
+      "id": "PL_1",
+      "type": "PL",
+      "name": "Customer Alpha",
+      "x": 35.0,
+      "y": 25.0,
+      "demand": 15,
+      "pickup": 0,
+      "tw_open": 480,
+      "tw_close": 720,
+      "service_time": 15
+    },
+    {
+      "id": "PL_2",
+      "type": "PL",
+      "name": "Customer Beta",
+      "x": 35.0,
+      "y": 15.0,
+      "demand": 10,
+      "pickup": 5,
+      "tw_open": 510,
+      "tw_close": 750,
+      "service_time": 15
+    }
+  ],
+  "fleet": {
+    "echelon_1": {
+      "type": "Heavy Truck (DP -> DS)",
+      "capacity": 350,
+      "fixed_cost": 280.0,
+      "cost_per_km": 1.75,
+      "max_duration": 600,
+      "fixed_cost_cents": 28000,
+      "cost_per_km_cents": 175
+    },
+    "echelon_2": {
+      "type": "Delivery Van (DS -> PL)",
+      "capacity": 65,
+      "fixed_cost": 85.0,
+      "cost_per_km": 0.8,
+      "max_duration": 480,
+      "fixed_cost_cents": 8500,
+      "cost_per_km_cents": 80
+    }
+  },
+  "duration_matrix_min": {
+    "DP_1": {
+      "DP_1": 0,
+      "DS_1": 25,
+      "PL_1": 35,
+      "PL_2": 35
+    },
+    "DS_1": {
+      "DP_1": 25,
+      "DS_1": 0,
+      "PL_1": 12,
+      "PL_2": 12
+    },
+    "PL_1": {
+      "DP_1": 35,
+      "DS_1": 12,
+      "PL_1": 0,
+      "PL_2": 15
+    },
+    "PL_2": {
+      "DP_1": 35,
+      "DS_1": 12,
+      "PL_1": 15,
+      "PL_2": 0
+    }
+  }
+}

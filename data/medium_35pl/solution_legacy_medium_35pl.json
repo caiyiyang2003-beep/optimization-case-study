@@ -1,0 +1,168 @@
+{
+  "team_name": "team1",
+  "api_key": "sk-team1-8f3a9e2c4b",
+  "instance_id": "instance_medium_35pl",
+  "claimed_cost": 2413.89,
+  "metadata": {
+    "name": "Solution Legacy V1.0 (Système existant)",
+    "description": "Solution historique produite par un ancien script glouton sans gestion des fenêtres de temps ni synchronisation fine.",
+    "author": "Équipe Logistique Précédente (2024)"
+  },
+  "routes": [
+    {
+      "vehicle_id": "Poids_Lourd_Legacy_1",
+      "route": [
+        "DP_1",
+        "DS_1",
+        "DS_2",
+        "DS_3",
+        "DP_1"
+      ],
+      "departure_time": 360,
+      "delivered_to_ds": {
+        "DS_1": 287,
+        "DS_2": 148,
+        "DS_3": 189
+      }
+    },
+    {
+      "vehicle_id": "Fourgonnette_Legacy_1",
+      "departure_time": 450,
+      "route": [
+        "DS_1",
+        "PL_1",
+        "PL_8",
+        "PL_9",
+        "DS_1"
+      ]
+    },
+    {
+      "vehicle_id": "Fourgonnette_Legacy_2",
+      "departure_time": 450,
+      "route": [
+        "DS_1",
+        "PL_10",
+        "PL_11",
+        "DS_1"
+      ]
+    },
+    {
+      "vehicle_id": "Fourgonnette_Legacy_3",
+      "departure_time": 450,
+      "route": [
+        "DS_1",
+        "PL_13",
+        "PL_18",
+        "DS_1"
+      ]
+    },
+    {
+      "vehicle_id": "Fourgonnette_Legacy_4",
+      "departure_time": 450,
+      "route": [
+        "DS_1",
+        "PL_20",
+        "PL_22",
+        "DS_1"
+      ]
+    },
+    {
+      "vehicle_id": "Fourgonnette_Legacy_5",
+      "departure_time": 450,
+      "route": [
+        "DS_1",
+        "PL_25",
+        "PL_26",
+        "PL_28",
+        "PL_29",
+        "DS_1"
+      ]
+    },
+    {
+      "vehicle_id": "Fourgonnette_Legacy_6",
+      "departure_time": 450,
+      "route": [
+        "DS_1",
+        "PL_31",
+        "PL_32",
+        "PL_33",
+        "PL_35",
+        "DS_1"
+      ]
+    },
+    {
+      "vehicle_id": "Fourgonnette_Legacy_7",
+      "departure_time": 450,
+      "route": [
+        "DS_2",
+        "PL_2",
+        "PL_3",
+        "PL_4",
+        "DS_2"
+      ]
+    },
+    {
+      "vehicle_id": "Fourgonnette_Legacy_8",
+      "departure_time": 450,
+      "route": [
+        "DS_2",
+        "PL_6",
+        "PL_12",
+        "PL_16",
+        "DS_2"
+      ]
+    },
+    {
+      "vehicle_id": "Fourgonnette_Legacy_9",
+      "departure_time": 450,
+      "route": [
+        "DS_2",
+        "PL_19",
+        "PL_23",
+        "PL_27",
+        "DS_2"
+      ]
+    },
+    {
+      "vehicle_id": "Fourgonnette_Legacy_10",
+      "departure_time": 450,
+      "route": [
+        "DS_3",
+        "PL_5",
+        "PL_7",
+        "DS_3"
+      ]
+    },
+    {
+      "vehicle_id": "Fourgonnette_Legacy_11",
+      "departure_time": 450,
+      "route": [
+        "DS_3",
+        "PL_14",
+        "PL_15",
+        "PL_17",
+        "DS_3"
+      ]
+    },
+    {
+      "vehicle_id": "Fourgonnette_Legacy_12",
+      "departure_time": 450,
+      "route": [
+        "DS_3",
+        "PL_21",
+        "PL_24",
+        "PL_30",
+        "DS_3"
+      ]
+    },
+    {
+      "vehicle_id": "Fourgonnette_Legacy_13",
+      "departure_time": 450,
+      "route": [
+        "DS_3",
+        "PL_34",
+        "DS_3"
+      ]
+    }
+  ]
+}

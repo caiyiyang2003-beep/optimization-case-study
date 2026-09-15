@@ -1,0 +1,25 @@
+﻿{
+  "team_name": "team1",
+  "api_key": "sk-team1-8f3a9e2c4b",
+  "instance_id": "instance_toy_2pl",
+  "claimed_cost_cents": 45420,
+  "routes": [
+    {
+      "vehicle_id": "Heavy_Truck_1",
+      "stops": [
+        { "node": "DP_1", "arrival": 360, "departure": 360 },
+        { "node": "DS_1", "arrival": 385, "departure": 445 },
+        { "node": "DP_1", "arrival": 470, "departure": 470 }
+      ]
+    },
+    {
+      "vehicle_id": "Delivery_Van_1",
+      "stops": [
+        { "node": "DS_1", "arrival": 460, "departure": 460 },
+        { "node": "PL_1", "arrival": 472, "departure": 495 },
+        { "node": "PL_2", "arrival": 510, "departure": 525 },
+        { "node": "DS_1", "arrival": 537, "departure": 537 }
+      ]
+    }
+  ]
+}

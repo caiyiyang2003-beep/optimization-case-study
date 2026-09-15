@@ -1,0 +1,103 @@
+{
+  "team_name": "team1",
+  "api_key": "sk-team1-8f3a9e2c4b",
+  "instance_id": "instance_small_easy_8pl",
+  "claimed_cost_cents": 78800,
+  "routes": [
+    {
+      "vehicle_id": "Heavy_Truck_1",
+      "stops": [
+        {
+          "node": "DP_1",
+          "arrival": 360,
+          "departure": 360
+        },
+        {
+          "node": "DS_1",
+          "arrival": 421,
+          "departure": 446
+        },
+        {
+          "node": "DS_2",
+          "arrival": 526,
+          "departure": 551
+        },
+        {
+          "node": "DP_1",
+          "arrival": 612,
+          "departure": 612
+        }
+      ]
+    },
+    {
+      "vehicle_id": "Delivery_Van_1",
+      "stops": [
+        {
+          "node": "DS_1",
+          "arrival": 446,
+          "departure": 446
+        },
+        {
+          "node": "PL_1",
+          "arrival": 456,
+          "departure": 466
+        },
+        {
+          "node": "PL_2",
+          "arrival": 479,
+          "departure": 489
+        },
+        {
+          "node": "PL_4",
+          "arrival": 505,
+          "departure": 515
+        },
+        {
+          "node": "PL_3",
+          "arrival": 526,
+          "departure": 536
+        },
+        {
+          "node": "DS_1",
+          "arrival": 546,
+          "departure": 546
+        }
+      ]
+    },
+    {
+      "vehicle_id": "Delivery_Van_2",
+      "stops": [
+        {
+          "node": "DS_2",
+          "arrival": 551,
+          "departure": 551
+        },
+        {
+          "node": "PL_5",
+          "arrival": 561,
+          "departure": 571
+        },
+        {
+          "node": "PL_6",
+          "arrival": 584,
+          "departure": 594
+        },
+        {
+          "node": "PL_8",
+          "arrival": 610,
+          "departure": 620
+        },
+        {
+          "node": "PL_7",
+          "arrival": 631,
+          "departure": 641
+        },
+        {
+          "node": "DS_2",
+          "arrival": 651,
+          "departure": 651
+        }
+      ]
+    }
+  ]
+}
