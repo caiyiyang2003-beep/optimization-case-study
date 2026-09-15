@@ -2,13 +2,23 @@
 2D Visualizer for distribution network instances (Main Warehouses, Secondary Hubs, Customer Delivery Points).
 Displays node map, coordinates, time windows, and package demands.
 """
-
+from pathlib import Path
 import json
 import argparse
 import os
 import matplotlib.pyplot as plt
 
 def plot_instance(json_path, output_image_path=None, show=False):
+    # Project root: optimization-case-study/
+    project_root = Path(__file__).resolve().parent.parent
+
+    # Convert the input path into a Path object
+    json_path = Path(json_path)
+
+    # If a relative path is given, resolve it from the project root
+    if not json_path.is_absolute():
+        json_path = project_root / json_path
+
     with open(json_path, 'r', encoding='utf-8') as f:
         data = json.load(f)
 
@@ -189,7 +199,13 @@ if __name__ == "__main__":
         pass
     
     parser = argparse.ArgumentParser(description="Render 2D node map for a distribution network instance")
-    parser.add_argument("--instance", type=str, default="/Users/starryovo/Desktop/M2S1/optimization-case-study/data/toy_2pl/instance_toy_2pl.json", help="Path to instance JSON file")
+    parser.add_argument(
+        "instance",
+        type=str,
+        nargs="?",
+        default="data/toy_2pl/instance_toy_2pl.json",
+        help="Path to instance JSON file"
+    )
     parser.add_argument("--output", type=str, default=None, help="Save path for PNG image")
     parser.add_argument("--show", action="store_true", help="Open interactive matplotlib window")
 
