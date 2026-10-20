@@ -1,0 +1,116 @@
+{
+  "metadata": {
+    "title": "Instance 01 Toy-2PL",
+    "benchmark_name": "instance_01_toy_2pl",
+    "seed": 202601,
+    "counts": {
+      "num_dp": 1,
+      "num_ds": 1,
+      "num_pl": 2,
+      "total_nodes": 4
+    },
+    "total_delivery_demand": 45,
+    "total_pickup_demand": 10,
+    "description": "Minimal 2-client verification instance with reference solution."
+  },
+  "nodes": [
+    {
+      "id": "DP_1",
+      "type": "DP",
+      "name": "Entrepôt Principal (DP)",
+      "x": 10.0,
+      "y": 20.0,
+      "demand": 0,
+      "pickup": 0,
+      "tw_open": 360,
+      "tw_close": 1260,
+      "service_time": 30
+    },
+    {
+      "id": "DS_1",
+      "type": "DS",
+      "name": "Hub Urbain Relais (DS)",
+      "x": 25.0,
+      "y": 40.0,
+      "demand": 0,
+      "pickup": 0,
+      "tw_open": 420,
+      "tw_close": 1140,
+      "service_time": 20
+    },
+    {
+      "id": "PL_1",
+      "type": "PL",
+      "name": "Client Alpha",
+      "x": 30.0,
+      "y": 55.0,
+      "demand": 25,
+      "pickup": 0,
+      "tw_open": 450,
+      "tw_close": 600,
+      "service_time": 15
+    },
+    {
+      "id": "PL_2",
+      "type": "PL",
+      "name": "Client Beta",
+      "x": 40.0,
+      "y": 35.0,
+      "demand": 20,
+      "pickup": 10,
+      "tw_open": 500,
+      "tw_close": 660,
+      "service_time": 15
+    }
+  ],
+  "fleet": {
+    "echelon_1": {
+      "vehicle_type": "Poids Lourd (Semi-remorque)",
+      "description": "Approvisionnement Dépôts Principaux -> Dépôts Secondaires",
+      "capacity": 350,
+      "fixed_cost": 280.0,
+      "cost_per_km": 1.75,
+      "max_duration": 600,
+      "max_available": 2,
+      "fixed_cost_cents": 28000,
+      "cost_per_km_cents": 175
+    },
+    "echelon_2": {
+      "vehicle_type": "Véhicule Utilitaire Léger (Fourgonnette / Électrique)",
+      "description": "Distribution Dernier Kilomètre Dépôts Secondaires -> Clients PL",
+      "capacity": 65,
+      "fixed_cost": 85.0,
+      "cost_per_km": 0.8,
+      "max_duration": 480,
+      "max_available": 5,
+      "fixed_cost_cents": 8500,
+      "cost_per_km_cents": 80
+    }
+  },
+  "duration_matrix_min": {
+    "DP_1": {
+      "DP_1": 0,
+      "DS_1": 33,
+      "PL_1": 54,
+      "PL_2": 45
+    },
+    "DS_1": {
+      "DP_1": 33,
+      "DS_1": 0,
+      "PL_1": 21,
+      "PL_2": 21
+    },
+    "PL_1": {
+      "DP_1": 54,
+      "DS_1": 21,
+      "PL_1": 0,
+      "PL_2": 30
+    },
+    "PL_2": {
+      "DP_1": 45,
+      "DS_1": 21,
+      "PL_1": 30,
+      "PL_2": 0
+    }
+  }
+}

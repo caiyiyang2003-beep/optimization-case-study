@@ -1,0 +1,133 @@
+{
+  "team_name": "team1",
+  "api_key": "sk-most-2026-titan-g1",
+  "instance_id": "instance_small_easy_8pl",
+  "claimed_cost_cents": 96280,
+  "routes": [
+    {
+      "vehicle_id": "Heavy_Truck_1",
+      "stops": [
+        {
+          "node": "DP_1",
+          "arrival": 360,
+          "departure": 360
+        },
+        {
+          "node": "DS_1",
+          "arrival": 421,
+          "departure": 446
+        },
+        {
+          "node": "DS_2",
+          "arrival": 526,
+          "departure": 551
+        },
+        {
+          "node": "DP_1",
+          "arrival": 612,
+          "departure": 612
+        }
+      ]
+    },
+    {
+      "vehicle_id": "Delivery_Van_1",
+      "stops": [
+        {
+          "node": "DS_2",
+          "arrival": 1087,
+          "departure": 1087
+        },
+        {
+          "node": "PL_6",
+          "arrival": 1097,
+          "departure": 1107
+        },
+        {
+          "node": "PL_5",
+          "arrival": 1120,
+          "departure": 1130
+        },
+        {
+          "node": "DS_2",
+          "arrival": 1140,
+          "departure": 1140
+        }
+      ]
+    },
+    {
+      "vehicle_id": "Delivery_Van_2",
+      "stops": [
+        {
+          "node": "DS_1",
+          "arrival": 1087,
+          "departure": 1087
+        },
+        {
+          "node": "PL_2",
+          "arrival": 1097,
+          "departure": 1107
+        },
+        {
+          "node": "PL_1",
+          "arrival": 1120,
+          "departure": 1130
+        },
+        {
+          "node": "DS_1",
+          "arrival": 1140,
+          "departure": 1140
+        }
+      ]
+    },
+    {
+      "vehicle_id": "Delivery_Van_3",
+      "stops": [
+        {
+          "node": "DS_1",
+          "arrival": 1089,
+          "departure": 1089
+        },
+        {
+          "node": "PL_4",
+          "arrival": 1099,
+          "departure": 1109
+        },
+        {
+          "node": "PL_3",
+          "arrival": 1120,
+          "departure": 1130
+        },
+        {
+          "node": "DS_1",
+          "arrival": 1140,
+          "departure": 1140
+        }
+      ]
+    },
+    {
+      "vehicle_id": "Delivery_Van_4",
+      "stops": [
+        {
+          "node": "DS_2",
+          "arrival": 1089,
+          "departure": 1089
+        },
+        {
+          "node": "PL_8",
+          "arrival": 1099,
+          "departure": 1109
+        },
+        {
+          "node": "PL_7",
+          "arrival": 1120,
+          "departure": 1130
+        },
+        {
+          "node": "DS_2",
+          "arrival": 1140,
+          "departure": 1140
+        }
+      ]
+    }
+  ]
+}

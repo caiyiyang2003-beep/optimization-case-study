@@ -1,0 +1,53 @@
+{
+  "team_name": "team1",
+  "api_key": "sk-most-2026-titan-g1",
+  "instance_id": "instance_01_toy_2pl",
+  "claimed_cost_cents": 49570,
+  "routes": [
+    {
+      "vehicle_id": "Heavy_Truck_1",
+      "stops": [
+        {
+          "node": "DP_1",
+          "arrival": 387,
+          "departure": 387
+        },
+        {
+          "node": "DS_1",
+          "arrival": 420,
+          "departure": 440
+        },
+        {
+          "node": "DP_1",
+          "arrival": 473,
+          "departure": 473
+        }
+      ]
+    },
+    {
+      "vehicle_id": "Delivery_Van_1",
+      "stops": [
+        {
+          "node": "DS_1",
+          "arrival": 519,
+          "departure": 519
+        },
+        {
+          "node": "PL_2",
+          "arrival": 540,
+          "departure": 555
+        },
+        {
+          "node": "PL_1",
+          "arrival": 585,
+          "departure": 600
+        },
+        {
+          "node": "DS_1",
+          "arrival": 621,
+          "departure": 621
+        }
+      ]
+    }
+  ]
+}
