@@ -29,13 +29,8 @@
       "stops": [
         {
           "node": "DS_1",
-          "arrival": 519,
-          "departure": 519
-        },
-        {
-          "node": "PL_2",
-          "arrival": 540,
-          "departure": 555
+          "arrival": 564,
+          "departure": 564
         },
         {
           "node": "PL_1",
@@ -43,9 +38,14 @@
           "departure": 600
         },
         {
+          "node": "PL_2",
+          "arrival": 630,
+          "departure": 645
+        },
+        {
           "node": "DS_1",
-          "arrival": 621,
-          "departure": 621
+          "arrival": 666,
+          "departure": 666
         }
       ]
     }

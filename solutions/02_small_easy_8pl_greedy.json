@@ -2,7 +2,7 @@
   "team_name": "team1",
   "api_key": "sk-most-2026-titan-g1",
   "instance_id": "instance_small_easy_8pl",
-  "claimed_cost_cents": 96280,
+  "claimed_cost_cents": 104200,
   "routes": [
     {
       "vehicle_id": "Heavy_Truck_1",
@@ -33,22 +33,32 @@
       "vehicle_id": "Delivery_Van_1",
       "stops": [
         {
-          "node": "DS_2",
-          "arrival": 1087,
-          "departure": 1087
+          "node": "DS_1",
+          "arrival": 909,
+          "departure": 909
         },
         {
-          "node": "PL_6",
-          "arrival": 1097,
-          "departure": 1107
+          "node": "PL_4",
+          "arrival": 919,
+          "departure": 929
+        },
+        {
+          "node": "PL_2",
+          "arrival": 945,
+          "departure": 955
+        },
+        {
+          "node": "PL_1",
+          "arrival": 968,
+          "departure": 978
         },
         {
           "node": "PL_5",
-          "arrival": 1120,
-          "departure": 1130
+          "arrival": 1058,
+          "departure": 1068
         },
         {
-          "node": "DS_2",
+          "node": "DS_1",
           "arrival": 1140,
           "departure": 1140
         }
@@ -58,22 +68,22 @@
       "vehicle_id": "Delivery_Van_2",
       "stops": [
         {
-          "node": "DS_1",
-          "arrival": 1087,
-          "departure": 1087
+          "node": "DS_2",
+          "arrival": 1089,
+          "departure": 1089
         },
         {
-          "node": "PL_2",
-          "arrival": 1097,
-          "departure": 1107
+          "node": "PL_7",
+          "arrival": 1099,
+          "departure": 1109
         },
         {
-          "node": "PL_1",
+          "node": "PL_8",
           "arrival": 1120,
           "departure": 1130
         },
         {
-          "node": "DS_1",
+          "node": "DS_2",
           "arrival": 1140,
           "departure": 1140
         }
@@ -84,13 +94,8 @@
       "stops": [
         {
           "node": "DS_1",
-          "arrival": 1089,
-          "departure": 1089
-        },
-        {
-          "node": "PL_4",
-          "arrival": 1099,
-          "departure": 1109
+          "arrival": 1110,
+          "departure": 1110
         },
         {
           "node": "PL_3",
@@ -109,16 +114,11 @@
       "stops": [
         {
           "node": "DS_2",
-          "arrival": 1089,
-          "departure": 1089
+          "arrival": 1110,
+          "departure": 1110
         },
         {
-          "node": "PL_8",
-          "arrival": 1099,
-          "departure": 1109
-        },
-        {
-          "node": "PL_7",
+          "node": "PL_6",
           "arrival": 1120,
           "departure": 1130
         },
