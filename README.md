@@ -15,8 +15,9 @@ Python 3 only, no packages needed (`scripts/plot_instance.py` needs matplotlib f
 # solve all 10 instances, write the solutions to solutions/ and the table to solutions/summary.md
 python3 src/run_all.py
 
-# solve one instance
-python3 src/greedy_nn.py -i data/instances/instance_03_medium_35pl.json -o solutions/03.json
+# solve one instance: set INSTANCE at the top of src/greedy_nn.py, then run the file
+# (or press Run in your editor); the solution is checked with the validator automatically
+python3 src/greedy_nn.py
 
 # check one solution with the course validator
 python3 scripts/evaluate_solution.py --instance data/instances/instance_03_medium_35pl.json --solution solutions/03_medium_35pl_greedy.json
@@ -50,7 +51,7 @@ Everything is read from the JSON file; nothing is tuned for a particular instanc
    and the next van starts. Service must end before the window closes (our assumption).
 2. **Group 1 repair.** Every hub sends at least 2 van trips and no hub sends more than half of them.
    While a rule is broken, apply the cheapest move that reduces the violation:
-   A. move a whole route to another hub, or B. take one customer out and serve it with its own van.
+   take one customer out of a route and serve it with its own van, from any hub.
 3. **Trucks: nearest neighbour too.** Demand above a full truckload goes first in direct trips.
    For the remaining demand, a truck leaves the DP and keeps driving to the closest hub whose
    remaining demand still fits and whose time window can still be met.
@@ -58,7 +59,8 @@ Everything is read from the JSON file; nothing is tuned for a particular instanc
    so far must cover the goods taken by all vans gone so far. A hub that runs short gets its own
    truck trip and the trucks are planned again.
 5. **Fleet limit (constraint 34) and multiple trips.** Trips are chained onto physical vehicles so
-   that `max_available` is respected. The second trip of a vehicle is named like
+   that `max_available` is respected. If there are too many vans, trips leave as early as possible,
+   but never before the last truck has unloaded at their hub, so one van can run several trips. The second trip of a vehicle is named like
    `Delivery_Van_3_T2`, and every trip pays the fixed cost again (our assumption).
 
 When an instance cannot be solved, the code says why instead of crashing.

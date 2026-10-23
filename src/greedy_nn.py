@@ -11,15 +11,23 @@ Steps
   4. Vehicles trips are chained onto physical vehicles (multi-trip model, constraints 39-45).
 
 Usage
-  python3 src/greedy_nn.py -i data/instances/instance_03_medium_35pl.json -o solutions/03.json
+  Choose the instance in INSTANCE below and run this file (python3 src/greedy_nn.py).
+  The solution is written to solutions/<instance>_greedy.json and checked with the course
+  validator. src/run_all.py solves every instance at once.
 """
-import argparse
 import json
 import os
 import sys
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
 from instance_tools import InstanceError, load_instance  # noqa: E402
+
+# ====================================================================== choose here
+# 01_toy_2pl, 02_small_easy_8pl, 03_medium_35pl, 04_district_50pl, 05_suburban_52pl,
+# 06_micro_hubs_18ds, 07_regional_58pl, 08_legacy_crm_60pl, 09_urban_64pl, 10_metropolis_75pl
+INSTANCE = "03_medium_35pl"
+FLEET_LIMITS = True          # respect max_available (the online evaluator does not check it)
 
 
 class Infeasible(Exception):
@@ -56,7 +64,8 @@ class Solver:
         return latest - I.tt(hub, nxt)
 
     def simulate(self, hub, seq, dep):
-        """[(node, arrival, departure)] when leaving `hub` at `dep`, or None if a window fails."""
+        """[(node, arrival, departure)] when leaving `hub` at `dep` and coming back, or None if
+        a window fails. Used for van routes (hub = DS) and truck trips (hub = DP)."""
         I, t, prev, stops = self.I, dep, hub, [(hub, dep, dep)]
         for c in seq:
             arrival = t + I.tt(prev, c)
@@ -145,28 +154,23 @@ class Solver:
         return sum(2 * max(0, 2 - k) + max(0, 2 * k - len(routes)) for k in n)
 
     def repair_group1(self, routes):
-        """Cheapest move that reduces the violation, until both rules hold:
-        A. give a whole route to another hub, or B. serve one customer alone from a hub."""
+        """Until both rules hold, apply the cheapest move that reduces the violation: take one
+        customer out of a route and serve it alone, from any hub."""
         while not self.group1_ok(routes):
             v0, best = self.violation(routes), None
             for r, (h, seq) in enumerate(routes):
-                options = [(g, seq, None) for g in self.I.hubs if g != h]                    # move A
-                if len(seq) > 1:                                                              # move B
-                    options += [(g, [c], i) for i, c in enumerate(seq) for g in self.I.hubs]
-                for g, new, i in options:
-                    rest = seq if i is None else seq[:i] + seq[i + 1:]
-                    if not self.schedule(g, new) or (i is not None and not self.schedule(h, rest)):
-                        continue
-                    cand = [list(x) for x in routes]
-                    if i is None:
-                        cand[r][0] = g
-                    else:
+                for i, c in enumerate(seq if len(seq) > 1 else []):
+                    rest = seq[:i] + seq[i + 1:]
+                    for g in self.I.hubs:
+                        if not self.schedule(g, [c]) or not self.schedule(h, rest):
+                            continue
+                        cand = [list(x) for x in routes]
                         cand[r][1] = rest
-                        cand.append([g, new])
-                    if self.violation(cand) < v0:
-                        cost = self.total_cost(cand)
-                        if best is None or cost < best[0]:
-                            best = (cost, cand)
+                        cand.append([g, [c]])
+                        if self.violation(cand) < v0:
+                            cost = self.total_cost(cand)
+                            if best is None or cost < best[0]:
+                                best = (cost, cand)
             if best is None:
                 raise Infeasible("Group 1 rules cannot be met")
             routes = best[1]
@@ -177,18 +181,10 @@ class Solver:
         """One truck trip DP -> hubs in `order` -> DP, or None if it breaks a window or the shift."""
         I = self.I
         dep = max(I.open(I.dp), I.open(order[0]) - I.tt(I.dp, order[0]))   # no early waiting
-        t, prev, visits = dep, I.dp, []
-        for h in order:
-            arrival = t + I.tt(prev, h)
-            t = max(arrival, I.open(h)) + I.service(h)                      # end of unloading
-            if t > I.close(h):
-                return None
-            visits.append((h, arrival, t))
-            prev = h
-        back = t + I.tt(prev, I.dp)
-        if back > I.close(I.dp) or back - dep > I.dmax_t:
+        stops = self.simulate(I.dp, order, dep)
+        if stops is None or stops[-1][1] - dep > I.dmax_t:
             return None
-        return {"hubs": list(order), "dep": dep, "visits": visits, "ret": back,
+        return {"hubs": list(order), "dep": dep, "visits": stops[1:-1], "ret": stops[-1][1],
                 "cost": I.fixed_t + I.km_t * I.path_km([I.dp] + list(order) + [I.dp])}
 
     def plan_trucks(self, vans):
@@ -298,17 +294,13 @@ class Solver:
         I = self.I
         van_ids = self.chain([(k, h, st[0][2], st[-1][1]) for k, (h, st) in enumerate(vans)], 0, I.dmax_v)
         if self.fleet_limits and I.nmax_v and len(van_ids) > I.nmax_v:
-            # Too many vans: let trips leave earlier so one van can run several of them.
-            # Try "after the first truck has unloaded at the hub" (stock checked again), then
-            # "after the last one" (the hub then holds all its stock: always fine).
-            unload = {h: [f for t in trips for g, _, f in t["visits"] if g == h] or [self.ready[h]]
-                      for h in I.hubs}
-            for pick in (min, max):
-                ids, scheds = self.chain_vans(routes, {h: pick(unload[h]) for h in I.hubs})
-                if len(ids) <= I.nmax_v and not self.short_hubs(trips, scheds):
-                    van_ids, vans = ids, scheds
-                    break
-            else:
+            # Too many vans: let trips leave as early as possible, so that one van can run
+            # several of them, but not before the last truck has unloaded at the hub (the hub
+            # then holds all its stock, so the stock check still holds).
+            last = {h: max([f for t in trips for g, _, f in t["visits"] if g == h], default=self.ready[h])
+                    for h in I.hubs}
+            van_ids, vans = self.chain_vans(routes, last)
+            if len(van_ids) > I.nmax_v:
                 raise Infeasible(f"{len(vans)} van trips need {len(van_ids)} vans, the fleet has {I.nmax_v}")
         truck_ids = self.chain([(k, 0, t["dep"], t["ret"]) for k, t in enumerate(trips)],
                                I.service(I.dp), I.dmax_t)
@@ -358,21 +350,22 @@ def solve_file(path, out, fleet_limits=True):
 
 
 def main():
-    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--instance", "-i", required=True)
-    ap.add_argument("--out", "-o", required=True)
-    ap.add_argument("--ignore-fleet-limits", action="store_true",
-                    help="ignore max_available (the online evaluator does not check it)")
-    args = ap.parse_args()
+    sys.path.insert(0, os.path.join(HERE, "..", "scripts"))
+    from evaluate_solution import evaluate_solution
+    path = os.path.join(HERE, "..", "data", "instances", f"instance_{INSTANCE}.json")
+    out = os.path.join(HERE, "..", "solutions", f"{INSTANCE}_greedy.json")
     try:
-        r = solve_file(args.instance, args.out, not args.ignore_fleet_limits)
+        r = solve_file(path, out, FLEET_LIMITS)
     except InstanceError as e:
         sys.exit(f"Invalid instance: {e}")
     except Infeasible as e:
         sys.exit(f"No feasible solution: {e}")
     print(f"{r['instance'].name}: {r['truck_trips']} truck trips on {r['trucks']} trucks, "
           f"{r['van_trips']} van trips on {r['vans']} vans, "
-          f"cost {r['solution']['claimed_cost_cents'] / 100:.2f} EUR -> {args.out}")
+          f"cost {r['solution']['claimed_cost_cents'] / 100:.2f} EUR -> solutions/{INSTANCE}_greedy.json")
+    with open(path, encoding="utf-8") as f:
+        res = evaluate_solution(json.load(f), r["solution"])
+    print("Validator:", "OK" if res["isValid"] else "\n  ".join(["NOT VALID"] + res["violations"]))
 
 
 if __name__ == "__main__":
