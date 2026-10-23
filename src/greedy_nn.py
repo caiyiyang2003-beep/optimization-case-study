@@ -1,25 +1,25 @@
-"""Initial solution: nearest neighbour for the vans, savings for the trucks.
+"""Initial solution: nearest neighbour for the vans and for the trucks.
 
 Steps
   1. Vans     nearest neighbour: a van leaves a hub, keeps driving to the closest customer it
               can still serve (capacity with pickups, time windows, shift limit), and returns
               when no customer fits; then the next van starts.
   2. Group 1  every hub sends at least 2 vans and no hub more than half of them.
-  3. Trucks   savings heuristic on the hubs; a max flow checks that every van finds its
-              stock unloaded before it leaves (model constraints 29-33).
+  3. Trucks   nearest neighbour too: a truck leaves the DP and keeps driving to the closest
+              hub whose remaining demand still fits; then every hub must hold enough stock
+              each time a van leaves (model constraints 29-33).
   4. Vehicles trips are chained onto physical vehicles (multi-trip model, constraints 39-45).
 
 Usage
   python3 src/greedy_nn.py -i data/instances/instance_03_medium_35pl.json -o solutions/03.json
 """
 import argparse
-import itertools
 import json
 import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from instance_tools import InstanceError, allocate_stock, load_instance  # noqa: E402
+from instance_tools import InstanceError, load_instance  # noqa: E402
 
 
 class Infeasible(Exception):
@@ -191,49 +191,75 @@ class Solver:
         return {"hubs": list(order), "dep": dep, "visits": visits, "ret": back,
                 "cost": I.fixed_t + I.km_t * I.path_km([I.dp] + list(order) + [I.dp])}
 
-    def best_trip(self, hubs):
-        """Cheapest feasible visiting order of a few hubs."""
-        orders = itertools.permutations(hubs) if len(hubs) <= 6 else [hubs]
-        trips = [t for t in map(self.truck_trip, orders) if t]
-        return min(trips, key=lambda t: t["cost"]) if trips else None
-
     def plan_trucks(self, vans):
-        """Clarke-Wright savings: start from direct trips, merge the pair that saves the most
-        while the load fits; if the stock check fails, split the latest merged trip again."""
+        """Demand above a full truckload goes first in direct trips; the rest by nearest
+        neighbour. A hub that runs short of stock gets its own trip, and we try again."""
         I = self.I
-        needs = [(h, st[0][2], sum(I.demand(c) for c, _, _ in st[1:-1])) for h, st in vans]
-        groups = []                                       # [hubs, load]
-        for h in I.hubs:
-            demand = sum(l for g, _, l in needs if g == h)
-            groups += [[[h], I.cap_t]] * (demand // I.cap_t)
-            if demand % I.cap_t:
-                groups.append([[h], demand % I.cap_t])
+        need = {h: 0 for h in I.hubs}
+        for h, st in vans:
+            need[h] += sum(I.demand(c) for c, _, _ in st[1:-1])
+        full, todo = [], {}
+        for h, d in need.items():
+            while d > I.cap_t:
+                full.append(self.direct_trip(h, I.cap_t))
+                d -= I.cap_t
+            if d:
+                todo[h] = d
+        alone = set()                                     # hubs served by their own trip
         while True:
-            best = None
-            for a, b in itertools.combinations(range(len(groups)), 2):
-                (ha, la), (hb, lb) = groups[a], groups[b]
-                if set(ha) & set(hb) or la + lb > I.cap_t:
-                    continue
-                merged = self.best_trip(ha + hb)
-                if merged:
-                    saving = self.best_trip(ha)["cost"] + self.best_trip(hb)["cost"] - merged["cost"]
-                    if saving > 0 and (best is None or saving > best[0]):
-                        best = (saving, a, b)
-            if best is None:
-                break
-            _, a, b = best
-            groups[a] = [groups[a][0] + groups[b][0], groups[a][1] + groups[b][1]]
-            del groups[b]
-        trips = [self.best_trip(g[0]) for g in groups]
-        while True:
-            ok, _ = allocate_stock(I.cap_t, [[(h, fin) for h, _, fin in t["visits"]] for t in trips], needs)
-            if ok:
+            trips = full + [self.direct_trip(h, todo[h]) for h in alone] + \
+                self.nearest_trucks({h: d for h, d in todo.items() if h not in alone})
+            short = self.short_hubs(trips, vans)
+            if not short:
                 return trips
-            multi = [k for k, t in enumerate(trips) if len(t["hubs"]) > 1]
-            if not multi:
-                raise Infeasible("no truck plan supplies every van before it leaves")
-            k = max(multi, key=lambda k: trips[k]["visits"][-1][2])
-            trips[k:k + 1] = [self.truck_trip([h]) for h in trips[k]["hubs"]]
+            if short <= alone:
+                raise Infeasible(f"not enough stock at {sorted(short)} when the vans leave")
+            alone |= short
+
+    def direct_trip(self, h, load):
+        trip = self.truck_trip([h])
+        if trip is None:
+            raise Infeasible(f"no truck can reach {h} in its time window")
+        trip["unload"] = {h: load}
+        return trip
+
+    def nearest_trucks(self, todo):
+        """Nearest neighbour for the trucks: from the DP, go to the closest hub whose demand
+        still fits in the truck and whose window can still be met; back to the DP when none."""
+        I, todo, trips = self.I, dict(todo), []
+        while todo:
+            order, unload = [], {}
+            while True:
+                last = order[-1] if order else I.dp
+                nxt = [(I.dist(last, h), h) for h in todo
+                       if sum(unload.values()) + todo[h] <= I.cap_t and self.truck_trip(order + [h])]
+                if not nxt:
+                    break
+                h = min(nxt)[1]
+                order.append(h)
+                unload[h] = todo.pop(h)
+            if not order:
+                raise Infeasible(f"no truck can reach {sorted(todo)} in their time windows")
+            trip = self.truck_trip(order)
+            trip["unload"] = unload
+            trips.append(trip)
+        return trips
+
+    def short_hubs(self, trips, vans):
+        """Hubs where a van would leave before the trucks have unloaded enough stock: at each
+        van departure, stock unloaded so far >= goods taken by the vans gone so far."""
+        I, short = self.I, set()
+        for h in I.hubs:
+            unloaded = [(fin, t["unload"][h]) for t in trips for g, _, fin in t["visits"] if g == h]
+            departures = sorted((st[0][2], sum(I.demand(c) for c, _, _ in st[1:-1]))
+                                for g, st in vans if g == h)
+            taken = 0
+            for dep, load in departures:
+                taken += load
+                if taken > sum(q for fin, q in unloaded if fin <= dep):
+                    short.add(h)
+                    break
+        return short
 
     # ------------------------------------------------------------------ 4. vehicles
     @staticmethod
@@ -273,15 +299,13 @@ class Solver:
         van_ids = self.chain([(k, h, st[0][2], st[-1][1]) for k, (h, st) in enumerate(vans)], 0, I.dmax_v)
         if self.fleet_limits and I.nmax_v and len(van_ids) > I.nmax_v:
             # Too many vans: let trips leave earlier so one van can run several of them.
-            # Try "after the first truck has unloaded at the hub" (stock checked again by max
-            # flow), then "after the last one" (the hub then holds all its stock: always fine).
+            # Try "after the first truck has unloaded at the hub" (stock checked again), then
+            # "after the last one" (the hub then holds all its stock: always fine).
             unload = {h: [f for t in trips for g, _, f in t["visits"] if g == h] or [self.ready[h]]
                       for h in I.hubs}
-            visits = [[(h, f) for h, _, f in t["visits"]] for t in trips]
             for pick in (min, max):
                 ids, scheds = self.chain_vans(routes, {h: pick(unload[h]) for h in I.hubs})
-                needs = [(h, st[0][2], sum(I.demand(c) for c, _, _ in st[1:-1])) for h, st in scheds]
-                if len(ids) <= I.nmax_v and allocate_stock(I.cap_t, visits, needs)[0]:
+                if len(ids) <= I.nmax_v and not self.short_hubs(trips, scheds):
                     van_ids, vans = ids, scheds
                     break
             else:

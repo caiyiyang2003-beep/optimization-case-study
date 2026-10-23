@@ -5,6 +5,26 @@
   "claimed_cost_cents": 287840,
   "routes": [
     {
+      "vehicle_id": "Heavy_Truck_3",
+      "stops": [
+        {
+          "node": "DP_1",
+          "arrival": 385,
+          "departure": 385
+        },
+        {
+          "node": "DS_3",
+          "arrival": 420,
+          "departure": 445
+        },
+        {
+          "node": "DP_1",
+          "arrival": 477,
+          "departure": 477
+        }
+      ]
+    },
+    {
       "vehicle_id": "Heavy_Truck_1",
       "stops": [
         {
@@ -41,26 +61,6 @@
           "node": "DP_1",
           "arrival": 548,
           "departure": 548
-        }
-      ]
-    },
-    {
-      "vehicle_id": "Heavy_Truck_3",
-      "stops": [
-        {
-          "node": "DP_1",
-          "arrival": 385,
-          "departure": 385
-        },
-        {
-          "node": "DS_3",
-          "arrival": 420,
-          "departure": 445
-        },
-        {
-          "node": "DP_1",
-          "arrival": 477,
-          "departure": 477
         }
       ]
     },

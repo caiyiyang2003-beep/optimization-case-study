@@ -53,31 +53,6 @@
           "departure": 360
         },
         {
-          "node": "DS_1",
-          "arrival": 440,
-          "departure": 465
-        },
-        {
-          "node": "DS_2",
-          "arrival": 554,
-          "departure": 579
-        },
-        {
-          "node": "DP_1",
-          "arrival": 699,
-          "departure": 699
-        }
-      ]
-    },
-    {
-      "vehicle_id": "Heavy_Truck_4",
-      "stops": [
-        {
-          "node": "DP_1",
-          "arrival": 360,
-          "departure": 360
-        },
-        {
           "node": "DS_2",
           "arrival": 480,
           "departure": 505
@@ -90,7 +65,7 @@
       ]
     },
     {
-      "vehicle_id": "Heavy_Truck_5",
+      "vehicle_id": "Heavy_Truck_4",
       "stops": [
         {
           "node": "DP_1",
@@ -106,6 +81,31 @@
           "node": "DP_1",
           "arrival": 545,
           "departure": 545
+        }
+      ]
+    },
+    {
+      "vehicle_id": "Heavy_Truck_5",
+      "stops": [
+        {
+          "node": "DP_1",
+          "arrival": 360,
+          "departure": 360
+        },
+        {
+          "node": "DS_1",
+          "arrival": 440,
+          "departure": 465
+        },
+        {
+          "node": "DS_2",
+          "arrival": 554,
+          "departure": 579
+        },
+        {
+          "node": "DP_1",
+          "arrival": 699,
+          "departure": 699
         }
       ]
     },

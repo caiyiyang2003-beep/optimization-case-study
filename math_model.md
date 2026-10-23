@@ -190,7 +190,7 @@ The bounds hold for the single-trip baseline with one fixed cost per trip. Each 
 | Van distance | 181 km, 144.80 € | Every customer is entered exactly once, from a hub or another customer; the sum of the shortest incoming arc per customer is 181 km. |
 | Truck distance | 225 km, 393.75 € | At least two truck trips, and every hub must be supplied (every hub dispatches vans (36) and starts with no stock). Enumerating every way to cover the three hubs with two trips, with rounded distances, gives a minimum of 225 km: DP → DS_1 → DS_2 → DP (169 km) and DP → DS_3 → DP (56 km). Three or more trips give at least 281 km. |
 | Total lower bound | 1 948.55 € | 1 410.00 + 144.80 + 393.75 €. |
-| Upper bound | to be computed | Cost of the first feasible solution of our greedy prototype (0 validator errors). The legacy solution is not feasible, so it is not an upper bound. |
+| Upper bound | 2 878.40 € | Cost of the first feasible solution of our solver (nearest neighbour for the vans and for the trucks, then a hub-by-hub stock check: at every van departure the hub must already hold the goods of all vans gone so far): 3 truck trips on 3 trucks and 11 van trips on 10 vans (DS_1 4, DS_2 3, DS_3 4), with 0 violations on the local validator and the online evaluator. Any feasible solution bounds the optimum from above; the gap to the lower bound is 47.7 %. For comparison, serving every customer with its own van (35 van trips on 13 vans) is also feasible but costs 5 008.80 €. The legacy solution (2 179.90 € verified) is not feasible, so it is not an upper bound. |
 
 
 ## 8. Link to the Constraint Table
