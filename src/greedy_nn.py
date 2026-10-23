@@ -10,7 +10,7 @@ Steps
   4. Vehicles trips are chained onto physical vehicles (multi-trip model, constraints 39-45).
 
 Usage
-  python3 src/greedy.py -i data/instances/instance_03_medium_35pl.json -o solutions/03.json
+  python3 src/greedy_nn.py -i data/instances/instance_03_medium_35pl.json -o solutions/03.json
 """
 import argparse
 import itertools
@@ -19,7 +19,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from common import InstanceError, allocate_stock, load_instance  # noqa: E402
+from instance_tools import InstanceError, allocate_stock, load_instance  # noqa: E402
 
 
 class Infeasible(Exception):

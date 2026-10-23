@@ -1,4 +1,4 @@
-"""Shared helpers for the solver and the checker.
+"""Instance tools used by every solver (greedy_nn.py, ils.py).
 
 * Instance loading with input validation (broken JSON, missing or non-numeric fields,
   orders larger than a van, inconsistent time windows).

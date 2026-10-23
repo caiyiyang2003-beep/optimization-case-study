@@ -18,8 +18,8 @@ from multiprocessing import Pool
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-from common import load_instance  # noqa: E402
-from greedy import Solver  # noqa: E402
+from instance_tools import load_instance  # noqa: E402
+from greedy_nn import Solver  # noqa: E402
 from ils import ILS, NEIGHBOURHOODS, VND  # noqa: E402
 
 INSTANCES = ["01_toy_2pl", "02_small_easy_8pl", "03_medium_35pl", "04_district_50pl",

@@ -1,7 +1,7 @@
 """Iterated Local Search, built like the TSP lab (v2): initial solution, VND local search,
 perturbation, acceptance criterion.
 
-  Initial solution  nearest neighbour + Group 1 repair (greedy.py)
+  Initial solution  nearest neighbour + Group 1 repair (greedy_nn.py)
   Local search      VND: 2-opt then Or-opt, best improvement (chosen by src/tune_vnd.py, see
                     solutions/vnd_comparison.md)
   Perturbation      remove k random customers, put each back at its cheapest feasible place
@@ -9,7 +9,7 @@ perturbation, acceptance criterion.
   Stop              time limit
 
 A solution is a list of van routes [hub, [customers]]. The trucks and the assignment of trips
-to vehicles are computed from the van routes (greedy.Solver) whenever a total cost is needed.
+to vehicles are computed from the van routes (greedy_nn.Solver) whenever a total cost is needed.
 Local search works on the van cost (fast); acceptance uses the total cost (vans + trucks).
 
 Usage
@@ -24,8 +24,8 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from common import load_instance  # noqa: E402
-from greedy import Infeasible, Solver, to_json  # noqa: E402
+from instance_tools import load_instance  # noqa: E402
+from greedy_nn import Infeasible, Solver, to_json  # noqa: E402
 
 
 # ====================================================================== neighbourhoods
