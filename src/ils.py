@@ -190,8 +190,8 @@ class BestBasedThresholdAcceptance:
 
 class ILS:
     def __init__(self, inst, time_limit=60.0, seed=0, neighbourhoods=("two_opt", "or_opt"),
-                 strategy="best", k=None, tolerance=1.02, fleet_limits=True):
-        self.solver = Solver(inst, fleet_limits)
+                 strategy="best", k=None, tolerance=1.02):
+        self.solver = Solver(inst)
         self.rng = random.Random(seed)
         self.time_limit = time_limit
         self.vnd = VND(self.solver, neighbourhoods, strategy)
@@ -243,12 +243,10 @@ def main():
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--neighbourhoods", nargs=2, choices=NEIGHBOURHOODS, default=["two_opt", "or_opt"])
     ap.add_argument("--strategy", choices=("first", "best"), default="best")
-    ap.add_argument("--ignore-fleet-limits", action="store_true")
     args = ap.parse_args()
 
     inst = load_instance(args.instance)
-    ils = ILS(inst, args.time_limit, args.seed, args.neighbourhoods, args.strategy,
-              fleet_limits=not args.ignore_fleet_limits)
+    ils = ILS(inst, args.time_limit, args.seed, args.neighbourhoods, args.strategy)
     cost, plan, iterations = ils.solve()
     if plan is None:
         sys.exit("No feasible solution found")

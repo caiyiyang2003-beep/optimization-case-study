@@ -18,6 +18,7 @@ Usage
 import json
 import os
 import sys
+from itertools import accumulate
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
@@ -26,8 +27,7 @@ from instance_tools import InstanceError, load_instance  # noqa: E402
 # ====================================================================== choose here
 # 01_toy_2pl, 02_small_easy_8pl, 03_medium_35pl, 04_district_50pl, 05_suburban_52pl,
 # 06_micro_hubs_18ds, 07_regional_58pl, 08_legacy_crm_60pl, 09_urban_64pl, 10_metropolis_75pl
-INSTANCE = "03_medium_35pl"
-FLEET_LIMITS = True          # respect max_available (the online evaluator does not check it)
+INSTANCE = "06_micro_hubs_18ds"
 
 
 class Infeasible(Exception):
@@ -35,9 +35,8 @@ class Infeasible(Exception):
 
 
 class Solver:
-    def __init__(self, inst, fleet_limits=True):
+    def __init__(self, inst):
         self.I = inst
-        self.fleet_limits = fleet_limits
         self.group1 = len(inst.hubs) > 1          # the evaluator applies Group 1 rules then
         # earliest time a hub can hold stock: a truck going straight there at DP opening
         self.ready = {h: max(inst.open(inst.dp) + inst.tt(inst.dp, h), inst.open(h)) + inst.service(h)
@@ -46,14 +45,9 @@ class Solver:
     # ------------------------------------------------------------------ one van route
     def load_ok(self, seq):
         """Capacity when leaving the hub and after every stop (pickups take space)."""
-        load = sum(self.I.demand(c) for c in seq)
-        if load > self.I.cap_v:
-            return False
-        for c in seq:
-            load += self.I.pickup(c) - self.I.demand(c)
-            if load > self.I.cap_v:
-                return False
-        return True
+        start = sum(self.I.demand(c) for c in seq)
+        changes = (self.I.pickup(c) - self.I.demand(c) for c in seq)
+        return max(accumulate(changes, initial=start)) <= self.I.cap_v
 
     def latest_departure(self, hub, seq):
         """Latest time to leave `hub` and still serve `seq` in their windows (backward pass)."""
@@ -274,7 +268,8 @@ class Solver:
 
     def chain_vans(self, routes, earliest):
         """Like chain, but van trips leave as early as possible (not before `earliest[hub]`),
-        so that the next trip of the same van fits in its working day."""
+        so that the next trip of the same van fits in its working day. None if a trip cannot
+        leave that late."""
         I, vehicles, scheds = self.I, [], {}
         for _, k, h, seq in sorted((earliest[h], k, h, seq) for k, (h, seq) in enumerate(routes)):
             placed = False
@@ -286,25 +281,29 @@ class Solver:
                     break
             if not placed:
                 st = self.schedule_early(h, seq, earliest[h])
+                if st is None:
+                    return None
                 vehicles.append([h, st[0][2], st[-1][1], [k]])
                 scheds[k] = (h, st)
         return [v[3] for v in vehicles], [scheds[k] for k in range(len(routes))]
 
     def assign_vehicles(self, routes, vans, trips):
+        """Chain the trips onto physical vehicles and check the fleet limits (max_available)."""
         I = self.I
         van_ids = self.chain([(k, h, st[0][2], st[-1][1]) for k, (h, st) in enumerate(vans)], 0, I.dmax_v)
-        if self.fleet_limits and I.nmax_v and len(van_ids) > I.nmax_v:
+        if I.nmax_v and len(van_ids) > I.nmax_v:
             # Too many vans: let trips leave as early as possible, so that one van can run
             # several of them, but not before the last truck has unloaded at the hub (the hub
             # then holds all its stock, so the stock check still holds).
             last = {h: max([f for t in trips for g, _, f in t["visits"] if g == h], default=self.ready[h])
                     for h in I.hubs}
-            van_ids, vans = self.chain_vans(routes, last)
-            if len(van_ids) > I.nmax_v:
-                raise Infeasible(f"{len(vans)} van trips need {len(van_ids)} vans, the fleet has {I.nmax_v}")
+            chained = self.chain_vans(routes, last)
+            if chained is None or len(chained[0]) > I.nmax_v:
+                raise Infeasible(f"{len(vans)} van trips need more than the {I.nmax_v} vans of the fleet")
+            van_ids, vans = chained
         truck_ids = self.chain([(k, 0, t["dep"], t["ret"]) for k, t in enumerate(trips)],
                                I.service(I.dp), I.dmax_t)
-        if self.fleet_limits and I.nmax_t and len(truck_ids) > I.nmax_t:
+        if I.nmax_t and len(truck_ids) > I.nmax_t:
             raise Infeasible(f"{len(trips)} truck trips need {len(truck_ids)} trucks, the fleet has {I.nmax_t}")
         return vans, truck_ids, van_ids
 
@@ -337,10 +336,10 @@ def to_json(inst, trips, vans, truck_ids, van_ids, team="team1", key="sk-most-20
             "claimed_cost_cents": cost, "routes": out}
 
 
-def solve_file(path, out, fleet_limits=True):
+def solve_file(path, out):
     """Solve one instance file, write the solution and return a short summary."""
     inst = load_instance(path)
-    trips, vans, truck_ids, van_ids = Solver(inst, fleet_limits).solve()
+    trips, vans, truck_ids, van_ids = Solver(inst).solve()
     sol = to_json(inst, trips, vans, truck_ids, van_ids)
     os.makedirs(os.path.dirname(os.path.abspath(out)), exist_ok=True)
     with open(out, "w", encoding="utf-8") as f:
@@ -355,7 +354,7 @@ def main():
     path = os.path.join(HERE, "..", "data", "instances", f"instance_{INSTANCE}.json")
     out = os.path.join(HERE, "..", "solutions", f"{INSTANCE}_greedy.json")
     try:
-        r = solve_file(path, out, FLEET_LIMITS)
+        r = solve_file(path, out)
     except InstanceError as e:
         sys.exit(f"Invalid instance: {e}")
     except Infeasible as e:

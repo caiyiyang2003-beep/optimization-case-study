@@ -11,7 +11,7 @@ hubs or customers, and fleet limits are optional (some instances do not define t
 import json
 import math
 import os
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 
 class InstanceError(Exception):
@@ -36,7 +36,6 @@ class Instance:
     dmax_v: int          # max van shift (min)
     nmax_t: object       # max number of truck trips, None when the instance gives none
     nmax_v: object       # max number of van trips, None when the instance gives none
-    warnings: list = field(default_factory=list)
 
     # Geometry: Euclidean distance rounded to whole km, as in evaluate_solution.py
     def dist(self, u, v):
@@ -89,7 +88,7 @@ def load_instance(path):
     except (KeyError, TypeError) as e:
         raise InstanceError(f"missing section {e}") from None
 
-    nodes, problems, warnings = {}, [], []
+    nodes, problems = {}, []
     numeric = ("x", "y", "demand", "pickup", "tw_open", "tw_close", "service_time")
     for n in raw_nodes:
         nid = n.get("id")
@@ -121,7 +120,6 @@ def load_instance(path):
         km_v=cents(e2, "cost_per_km_cents", "cost_per_km", 0.80),
         dmax_t=e1.get("max_duration", 600), dmax_v=e2.get("max_duration", 480),
         nmax_t=e1.get("max_available"), nmax_v=e2.get("max_available"),
-        warnings=warnings,
     )
 
     # Structural and physical checks: an instance failing them has no feasible solution.
@@ -141,10 +139,6 @@ def load_instance(path):
     if problems:
         raise InstanceError("; ".join(problems))
 
-    ids = list(nodes)
-    missing = sum(1 for a in ids for b in ids if b not in inst.durations.get(a, {}))
-    if missing:
-        warnings.append(f"duration matrix lacks {missing} entries; using distance x 1.33 as the validator does")
     return inst
 
 

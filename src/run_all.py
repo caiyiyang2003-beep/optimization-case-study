@@ -21,21 +21,16 @@ def run_one(path):
     except InstanceError as e:
         return [name, "invalid instance", "", "", "", "", "", str(e)]
     out = os.path.join(OUT, f"{name}_greedy.json")
-    note = ""
     try:
         r = solve_file(path, out)
     except Infeasible as e:
-        try:
-            r = solve_file(path, out, fleet_limits=False)
-            note = f"fleet limit ignored ({e})"
-        except Infeasible as e2:
-            return [name, "infeasible", "", "", "", "", "", str(e2)]
+        return [name, "infeasible", "", "", "", "", "", str(e)]
     with open(path, encoding="utf-8") as f:
         res = evaluate_solution(json.load(f), r["solution"])
     lb = simple_lower_bound(inst, 2 if len(inst.hubs) > 1 else 0)
     return [name, "solved", f"{r['truck_trips']} on {r['trucks']}", f"{r['van_trips']} on {r['vans']}",
             f"{res['calculatedCostEur']:.2f}", f"{lb / 100:.2f}", "OK" if res["isValid"] else "NO",
-            note or "; ".join(res["violations"][:2])]
+            "; ".join(res["violations"][:2])]
 
 
 def main():
