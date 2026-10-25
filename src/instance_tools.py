@@ -5,6 +5,7 @@ from dataclasses import dataclass
 
 
 class InstanceError(Exception):
+    pass
 
 
 @dataclass

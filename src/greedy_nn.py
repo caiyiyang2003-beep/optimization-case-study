@@ -14,6 +14,8 @@ INSTANCE = "06_micro_hubs_18ds"
 
 
 class Infeasible(Exception):
+    pass
+
 
 class Solver:
     def __init__(self, inst):
