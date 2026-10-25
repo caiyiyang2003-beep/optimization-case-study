@@ -1,13 +1,3 @@
-"""Instance tools used by every solver (greedy_nn.py, ils.py).
-
-* Instance loading with input validation (broken JSON, missing or non-numeric fields,
-  orders larger than a van, inconsistent time windows).
-* Distances and travel times, rounded exactly as the course validator does.
-* Simple instance-independent lower bounds.
-
-Everything is read from the instance file: the code makes no assumption on the number of
-hubs or customers, and fleet limits are optional (some instances do not define them).
-"""
 import json
 import math
 import os
@@ -15,7 +5,6 @@ from dataclasses import dataclass
 
 
 class InstanceError(Exception):
-    """The instance file cannot be used as it is (unreadable or physically infeasible)."""
 
 
 @dataclass
@@ -79,7 +68,6 @@ def _read_json(path):
 
 
 def load_instance(path):
-    """Read and validate an instance. Raises InstanceError with a readable message."""
     data = _read_json(path)
     stem = os.path.splitext(os.path.basename(path))[0]
     try:
@@ -142,15 +130,8 @@ def load_instance(path):
     return inst
 
 
-# ---------------------------------------------------------------- bounds
+# bounds
 def simple_lower_bound(inst, min_vans_per_hub=0):
-    """Instance-independent lower bound on the total cost (cents), single-trip model.
-
-    fixed costs : ceil(D / Q_T) truck trips and max(ceil(D / Q_V), |H| * min_vans_per_hub) van trips
-    van km      : every customer is entered once, so add its cheapest incoming arc
-    truck km    : each truck trip goes out and back to at least the nearest hub
-    It is weaker than the medium-specific bound in the report but valid for every instance.
-    """
     D = sum(inst.demand(c) for c in inst.customers)
     k_t = max(1, math.ceil(D / inst.cap_t))
     k_v = max(math.ceil(D / inst.cap_v), len(inst.hubs) * min_vans_per_hub)

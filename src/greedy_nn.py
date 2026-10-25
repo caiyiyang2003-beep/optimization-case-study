@@ -1,20 +1,3 @@
-"""Initial solution: nearest neighbour for the vans and for the trucks.
-
-Steps
-  1. Vans     nearest neighbour: a van leaves a hub, keeps driving to the closest customer it
-              can still serve (capacity with pickups, time windows, shift limit), and returns
-              when no customer fits; then the next van starts.
-  2. Group 1  every hub sends at least 2 vans and no hub more than half of them.
-  3. Trucks   nearest neighbour too: a truck leaves the DP and keeps driving to the closest
-              hub whose remaining demand still fits; then every hub must hold enough stock
-              each time a van leaves (model constraints 29-33).
-  4. Vehicles trips are chained onto physical vehicles (multi-trip model, constraints 39-45).
-
-Usage
-  Choose the instance in INSTANCE below and run this file (python3 src/greedy_nn.py).
-  The solution is written to solutions/<instance>_greedy.json and checked with the course
-  validator. src/run_all.py solves every instance at once.
-"""
 import json
 import os
 import sys
@@ -31,8 +14,6 @@ INSTANCE = "06_micro_hubs_18ds"
 
 
 class Infeasible(Exception):
-    """The rules cannot all be met; the message says why."""
-
 
 class Solver:
     def __init__(self, inst):
@@ -50,7 +31,7 @@ class Solver:
         return max(accumulate(changes, initial=start)) <= self.I.cap_v
 
     def latest_departure(self, hub, seq):
-        """Latest time to leave `hub` and still serve `seq` in their windows (backward pass)."""
+        """Latest time to leave `hub` and still serve `seq` in their windows """
         I, latest, nxt = self.I, self.I.close(hub), hub
         for c in reversed(seq):
             latest = min(I.close(c), latest - I.tt(c, nxt)) - I.service(c)   # latest start at c
@@ -110,7 +91,7 @@ class Solver:
     def total_cost(self, routes):
         return sum(self.route_cost(h, s) for h, s in routes)
 
-    # ------------------------------------------------------------------ 1. nearest neighbour
+    # 1. nearest neighbour
     def nearest_neighbor(self):
         I = self.I
         todo = list(I.customers)
@@ -134,7 +115,7 @@ class Solver:
             routes.append([hub, seq])
         return routes
 
-    # ------------------------------------------------------------------ 2. Group 1 rules
+    # 2. Group 1 rules
     def group1_ok(self, routes):
         """At least 2 vans per hub, no hub above half of the vans (model 36-37)."""
         if not self.group1:
@@ -170,7 +151,7 @@ class Solver:
             routes = best[1]
         return routes
 
-    # ------------------------------------------------------------------ 3. trucks
+    # 3. trucks
     def truck_trip(self, order):
         """One truck trip DP -> hubs in `order` -> DP, or None if it breaks a window or the shift."""
         I = self.I
@@ -251,7 +232,7 @@ class Solver:
                     break
         return short
 
-    # ------------------------------------------------------------------ 4. vehicles
+    # 4. vehicles
     @staticmethod
     def chain(trips, gap, dmax):
         """Put trips (key, group, dep, ret) on vehicles: same group, `gap` minutes between two
@@ -307,7 +288,7 @@ class Solver:
             raise Infeasible(f"{len(trips)} truck trips need {len(truck_ids)} trucks, the fleet has {I.nmax_t}")
         return vans, truck_ids, van_ids
 
-    # ------------------------------------------------------------------ all steps
+    # all steps
     def solve(self):
         routes = self.repair_group1(self.nearest_neighbor())
         vans = [(h, self.schedule(h, seq)) for h, seq in routes]
