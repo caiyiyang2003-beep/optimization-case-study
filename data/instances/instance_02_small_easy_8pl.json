@@ -157,7 +157,9 @@
       "cost_per_km": 1.75,
       "max_duration": 600,
       "fixed_cost_cents": 28000,
-      "cost_per_km_cents": 175
+      "cost_per_km_cents": 175,
+      "cost_per_minute": 1.3,
+      "cost_per_minute_cents": 130
     },
     "echelon_2": {
       "type": "Delivery Van (DS -> PL)",
@@ -166,7 +168,9 @@
       "cost_per_km": 0.8,
       "max_duration": 480,
       "fixed_cost_cents": 8500,
-      "cost_per_km_cents": 80
+      "cost_per_km_cents": 80,
+      "cost_per_minute": 0.6,
+      "cost_per_minute_cents": 60
     }
   },
   "duration_matrix_min": {

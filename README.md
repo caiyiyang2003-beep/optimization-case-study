@@ -23,8 +23,8 @@ python3 src/greedy_nn.py
 python3 scripts/evaluate_solution.py --instance data/instances/instance_03_medium_35pl.json --solution solutions/03_medium_35pl_greedy.json
 ```
 
-Always check the final solutions on the online evaluator too: the local validator does not check
-the Group 1 rules, the online one does.
+`scripts/evaluate_solution.py` is the current version from the course website (downloaded
+2026-11-03): like the online evaluator, it checks the team name, the API key and the Group 1 rules.
 
 ## Files
 
@@ -83,14 +83,16 @@ When an instance cannot be solved, the code says why instead of crashing.
 All 6 feasible solutions pass the online evaluator with 0 violations. Lower bounds are in
 `solutions/summary.md` and in the Bounds section of the Doc.
 
-## Local validator vs online evaluator
+## Validator vs our code
 
-| Check | Local `evaluate_solution.py` | Online evaluator | Our code |
-|---|---|---|---|
-| Group 1 rules | not checked | checked | respected |
-| Service ends before the window closes | arrival only | arrival only | respected (stricter) |
-| Stock quantity | only "van leaves after the first truck arrives" | same | quantities checked (stricter) |
-| `max_available` | not checked | not checked | respected |
+The local validator and the online evaluator check the same rules.
+
+| Check | Validator | Our code |
+|---|---|---|
+| Group 1 rules | at least 2 van routes per hub, at most ceil(t/2) | at least 2, at most t/2 (stricter) |
+| Time windows | arrival only | service must end before the window closes (stricter) |
+| Stock quantity | only "van leaves after the first truck arrives" | quantities checked (stricter) |
+| `max_available` | not checked | respected |
 
 ## Next steps
 

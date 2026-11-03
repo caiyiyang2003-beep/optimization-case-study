@@ -2,7 +2,8 @@
   "team_name": "team1",
   "api_key": "sk-most-2026-titan-g1",
   "instance_id": "instance_small_easy_8pl",
-  "claimed_cost_cents": 104200,
+  "version": "2",
+  "claimed_cost_cents": 102900,
   "routes": [
     {
       "vehicle_id": "Heavy_Truck_1",
@@ -34,23 +35,23 @@
       "stops": [
         {
           "node": "DS_1",
-          "arrival": 909,
-          "departure": 909
-        },
-        {
-          "node": "PL_4",
-          "arrival": 919,
-          "departure": 929
+          "arrival": 927,
+          "departure": 927
         },
         {
           "node": "PL_2",
-          "arrival": 945,
-          "departure": 955
+          "arrival": 937,
+          "departure": 947
         },
         {
-          "node": "PL_1",
-          "arrival": 968,
-          "departure": 978
+          "node": "PL_4",
+          "arrival": 963,
+          "departure": 973
+        },
+        {
+          "node": "PL_3",
+          "arrival": 984,
+          "departure": 994
         },
         {
           "node": "PL_5",
@@ -98,7 +99,7 @@
           "departure": 1110
         },
         {
-          "node": "PL_3",
+          "node": "PL_1",
           "arrival": 1120,
           "departure": 1130
         },

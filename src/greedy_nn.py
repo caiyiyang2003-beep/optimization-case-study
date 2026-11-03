@@ -88,7 +88,7 @@ class Solver:
         return self.simulate(hub, seq, lo)
 
     def route_cost(self, hub, seq):
-        return self.I.fixed_v + self.I.km_v * self.I.path_km([hub] + seq + [hub])
+        return self.I.fixed_v + self.I.min_v * self.I.path_min([hub] + seq + [hub])
 
     def total_cost(self, routes):
         return sum(self.route_cost(h, s) for h, s in routes)
@@ -99,8 +99,8 @@ class Solver:
         todo = list(I.customers)
         routes = []
         while todo:
-            # a new van starts at the hub-customer pair that is closest and feasible
-            pairs = [(I.dist(h, c), h, c) for h in I.hubs for c in todo if self.schedule(h, [c])]
+            # a new van starts at the hub-customer pair that is closest (driving time) and feasible
+            pairs = [(I.tt(h, c), h, c) for h in I.hubs for c in todo if self.schedule(h, [c])]
             if not pairs:
                 raise Infeasible(f"customers {todo} cannot be served even by a dedicated van")
             _, hub, c = min(pairs)
@@ -108,7 +108,7 @@ class Solver:
             todo.remove(c)
             # it keeps going to the nearest customer that still fits in the route
             while True:
-                nxt = [(I.dist(seq[-1], c), c) for c in todo if self.schedule(hub, seq + [c])]
+                nxt = [(I.tt(seq[-1], c), c) for c in todo if self.schedule(hub, seq + [c])]
                 if not nxt:
                     break
                 c = min(nxt)[1]
@@ -162,7 +162,7 @@ class Solver:
         if stops is None or stops[-1][1] - dep > I.dmax_t:
             return None
         return {"hubs": list(order), "dep": dep, "visits": stops[1:-1], "ret": stops[-1][1],
-                "cost": I.fixed_t + I.km_t * I.path_km([I.dp] + list(order) + [I.dp])}
+                "cost": I.fixed_t + I.min_t * I.path_min([I.dp] + list(order) + [I.dp])}
 
     def plan_trucks(self, vans):
         """Demand above a full truckload goes first in direct trips; the rest by nearest
@@ -197,14 +197,14 @@ class Solver:
         return trip
 
     def nearest_trucks(self, todo):
-        """Nearest neighbour for the trucks: from the DP, go to the closest hub whose demand
+        """Nearest neighbour for the trucks: from the DP, go to the closest hub (driving time) whose demand
         still fits in the truck and whose window can still be met; back to the DP when none."""
         I, todo, trips = self.I, dict(todo), []
         while todo:
             order, unload = [], {}
             while True:
                 last = order[-1] if order else I.dp
-                nxt = [(I.dist(last, h), h) for h in todo
+                nxt = [(I.tt(last, h), h) for h in todo
                        if sum(unload.values()) + todo[h] <= I.cap_t and self.truck_trip(order + [h])]
                 if not nxt:
                     break
@@ -301,21 +301,22 @@ class Solver:
 
 def to_json(inst, trips, vans, truck_ids, van_ids, team="team1", key="sk-most-2026-titan-g1"):
     """Official submission format, one route per trip; a vehicle's 2nd trip is named X_T2.
-    The cost is computed as the validator does: fixed cost per route + rounded km x cost/km."""
+    The cost is computed as the validator does with "version": "2": fixed cost per route +
+    driving minutes (duration matrix) x cost per minute."""
     def names(prefix, vehicles):
         return {k: f"{prefix}_{v}" + (f"_T{r}" if r > 1 else "")
                 for v, keys in enumerate(vehicles, 1) for r, k in enumerate(keys, 1)}
 
     tid, vid = names("Heavy_Truck", truck_ids), names("Delivery_Van", van_ids)
     routes = [(tid[k], [(inst.dp, t["dep"], t["dep"])] + t["visits"] + [(inst.dp, t["ret"], t["ret"])],
-               inst.fixed_t, inst.km_t) for k, t in enumerate(trips)]
-    routes += [(vid[k], stops, inst.fixed_v, inst.km_v) for k, (_, stops) in enumerate(vans)]
+               inst.fixed_t, inst.min_t) for k, t in enumerate(trips)]
+    routes += [(vid[k], stops, inst.fixed_v, inst.min_v) for k, (_, stops) in enumerate(vans)]
     out, cost = [], 0
-    for name, stops, fixed, per_km in routes:
+    for name, stops, fixed, per_min in routes:
         out.append({"vehicle_id": name,
                     "stops": [{"node": n, "arrival": a, "departure": d} for n, a, d in stops]})
-        cost += fixed + per_km * inst.path_km([s[0] for s in stops])
-    return {"team_name": team, "api_key": key, "instance_id": inst.name,
+        cost += fixed + per_min * inst.path_min([s[0] for s in stops])
+    return {"team_name": team, "api_key": key, "instance_id": inst.name, "version": "2",
             "claimed_cost_cents": cost, "routes": out}
 
 

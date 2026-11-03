@@ -2,7 +2,8 @@
   "team_name": "team1",
   "api_key": "sk-most-2026-titan-g1",
   "instance_id": "instance_10_metropolis_75pl",
-  "claimed_cost_cents": 791975,
+  "version": "2",
+  "claimed_cost_cents": 790530,
   "routes": [
     {
       "vehicle_id": "Heavy_Truck_1",

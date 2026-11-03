@@ -20,8 +20,8 @@ class Instance:
     cap_v: int           # van capacity
     fixed_t: int         # fixed cost per truck trip (cents)
     fixed_v: int         # fixed cost per van trip (cents)
-    km_t: int            # truck cost per km (cents)
-    km_v: int            # van cost per km (cents)
+    min_t: int           # truck cost per minute of driving (cents), cost method V2
+    min_v: int           # van cost per minute of driving (cents), cost method V2
     dmax_t: int          # max truck shift (min)
     dmax_v: int          # max van shift (min)
     nmax_t: object       # max number of truck trips, None when the instance gives none
@@ -54,8 +54,8 @@ class Instance:
     def pickup(self, u):
         return self.nodes[u]["pickup"]
 
-    def path_km(self, path):
-        return sum(self.dist(path[i], path[i + 1]) for i in range(len(path) - 1))
+    def path_min(self, path):
+        return sum(self.tt(path[i], path[i + 1]) for i in range(len(path) - 1))
 
 
 def _read_json(path):
@@ -105,8 +105,8 @@ def load_instance(path):
         cap_t=e1.get("capacity", 350), cap_v=e2.get("capacity", 65),
         fixed_t=cents(e1, "fixed_cost_cents", "fixed_cost", 280.0),
         fixed_v=cents(e2, "fixed_cost_cents", "fixed_cost", 85.0),
-        km_t=cents(e1, "cost_per_km_cents", "cost_per_km", 1.75),
-        km_v=cents(e2, "cost_per_km_cents", "cost_per_km", 0.80),
+        min_t=cents(e1, "cost_per_minute_cents", "cost_per_minute", 1.30),
+        min_v=cents(e2, "cost_per_minute_cents", "cost_per_minute", 0.60),
         dmax_t=e1.get("max_duration", 600), dmax_v=e2.get("max_duration", 480),
         nmax_t=e1.get("max_available"), nmax_v=e2.get("max_available"),
     )
@@ -137,6 +137,6 @@ def simple_lower_bound(inst, min_vans_per_hub=0):
     k_t = max(1, math.ceil(D / inst.cap_t))
     k_v = max(math.ceil(D / inst.cap_v), len(inst.hubs) * min_vans_per_hub)
     origins = inst.hubs + inst.customers
-    van_km = sum(min(inst.dist(i, c) for i in origins if i != c) for c in inst.customers)
-    truck_km = k_t * 2 * min(inst.dist(inst.dp, h) for h in inst.hubs)
-    return k_t * inst.fixed_t + k_v * inst.fixed_v + van_km * inst.km_v + truck_km * inst.km_t
+    van_min = sum(min(inst.tt(i, c) for i in origins if i != c) for c in inst.customers)
+    truck_min = k_t * min(inst.tt(inst.dp, h) + inst.tt(h, inst.dp) for h in inst.hubs)
+    return k_t * inst.fixed_t + k_v * inst.fixed_v + van_min * inst.min_v + truck_min * inst.min_t
