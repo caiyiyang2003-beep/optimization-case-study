@@ -27,10 +27,10 @@ All times are in minutes from midnight, all costs in cents (same units as the va
 | sᵢ | service time at node i | `service_time` (DP 30, DS 25) |
 | [aᵢ, bᵢ] | time window of node i (open, close) | `tw_open`, `tw_close` |
 | τᵢⱼ | travel time from i to j (min) | `duration_matrix_min` |
-| δᵢⱼ | distance from i to j (km), Euclidean, rounded to integer km | from (x, y) |
+| δᵢⱼ | distance from i to j (km), Euclidean, rounded to integer km; not used in the cost (version 2) | from (x, y) |
 | Q^T, Q^V | truck / van capacity | 350 / 65 |
 | F^T, F^V | fixed cost per truck / van trip | 28 000 / 8 500 ct |
-| c^T, c^V | cost per km for truck / van | 175 / 80 ct |
+| c^T, c^V | cost per minute of driving for truck / van (version 2) | 130 / 60 ct per min |
 | D^T, D^V | max shift duration of truck / van | 600 / 480 min |
 | M | big constant for time (e.g. 1440) | |
 | M_L | big constant for load, M_L = Q^V + maxᵢ pᵢ | |
@@ -74,11 +74,11 @@ All times are in minutes from midnight, all costs in cents (same units as the va
 
 ```
 min Z =  F^T · Σ_{t∈T} y_t  +  F^V · Σ_{v∈V} y_v
-       + c^T · Σ_{t∈T} Σ_{i,j∈N¹} δᵢⱼ · x_tij
-       + c^V · Σ_{v∈V} Σ_{i,j∈N²} δᵢⱼ · x_vij
+       + c^T · Σ_{t∈T} Σ_{i,j∈N¹} τᵢⱼ · x_tij
+       + c^V · Σ_{v∈V} Σ_{i,j∈N²} τᵢⱼ · x_vij
 ```
 
-In euros: 280 Σ y_t + 85 Σ y_v + 1.75 Σ δᵢⱼ x_tij + 0.80 Σ δᵢⱼ x_vij  (C14, C15, C16).
+In euros: 280 Σ y_t + 85 Σ y_v + 1.30 Σ τᵢⱼ x_tij + 0.60 Σ τᵢⱼ x_vij  (C14, C15, C16). The last two terms are the driving-time costs.
 
 ## 5. Constraints
 
@@ -170,7 +170,7 @@ Several trucks may feed the same hub (C3).
 4. **Shift start and end.**
    - A truck's shift starts when it leaves the DP; loading at the DP (s₀) is not counted, as in the validator.
    - A van's shift starts when it leaves its hub. Loading a van takes no modelled time, and unloading pickups at the hub takes none either.
-5. **Distances.** δᵢⱼ is the Euclidean distance rounded to whole km, as in the validator. Travel times come from the duration matrix.
+5. **Cost method.** Variable costs follow the course standard "version 2": each leg is charged its driving time τᵢⱼ from the duration matrix, at 1.30 €/min for a truck and 0.60 €/min for a van; service and waiting time are not charged. The Euclidean distance δᵢⱼ is no longer used in the cost.
 6. **Truck capacity.** Constraint (4) is enforced even though the local validator does not check it.
 7. **Carrier agreements (Group 1).** The memo requires a minimum dispatch volume at every active hub, without giving a number, and forbids any carrier from handling more than half of the vans. The online evaluator for team1 checks two rules: every hub, even an otherwise unused one, has at least 2 van routes, and no hub has more than ⌈t/2⌉ van routes, where t is the total number of van routes. We use the stricter version of each rule, so that a solution satisfies both: every hub dispatches at least 2 vans (36), and no hub dispatches more than half of the vans (37). Vans are counted as van routes, as in the evaluator. A van works only for the carrier of its hub (C19).
 8. **Pickups.** Packages collected from customers are unloaded at the van's hub when it returns and stay there; they are not carried back to the DP on the same day, so they use no truck capacity and add no truck timing constraint.
@@ -180,17 +180,17 @@ Several trucks may feed the same hub (C3).
 
 ## 7. Bounds (medium instance)
 
-The bounds hold for the single-trip baseline with one fixed cost per trip. Each one keeps only the constraints it relies on, so it is valid for every feasible solution of the medium instance. Distances are in whole kilometres, as in the validator.
+The bounds hold for the single-trip baseline with one fixed cost per trip. Each one keeps only the constraints it relies on, so it is valid for every feasible solution of the medium instance. Driving times come from the duration matrix and are charged per minute, as in the validator (version 2).
 
 | Bound | Value | Justification |
 |---|---|---|
 | Fleet, trucks | 2 trips | A truck trip carries at most Q^T = 350 packages and the total delivery demand is 624, so at least ⌈624/350⌉ = 2 truck trips are needed. |
 | Fleet, vans | 10 trips | A van leaves its hub with its whole delivery load, at most Q^V = 65, so at least ⌈624/65⌉ = 10 van trips. Constraint (36) alone requires 2 × 3 = 6 vans, a weaker bound. A 4/3/3 split of 10 vans satisfies both (36) and (37). |
 | Fixed cost | 1 410.00 € | 2 × 280 € + 10 × 85 € = 141 000 ct. |
-| Van distance | 181 km, 144.80 € | Every customer is entered exactly once, from a hub or another customer; the sum of the shortest incoming arc per customer is 181 km. |
-| Truck distance | 225 km, 393.75 € | At least two truck trips, and every hub must be supplied (every hub dispatches vans (36) and starts with no stock). Enumerating every way to cover the three hubs with two trips, with rounded distances, gives a minimum of 225 km: DP → DS_1 → DS_2 → DP (169 km) and DP → DS_3 → DP (56 km). Three or more trips give at least 281 km. |
-| Total lower bound | 1 948.55 € | 1 410.00 + 144.80 + 393.75 €. |
-| Upper bound | 2 878.40 € | Cost of the first feasible solution of our solver (nearest neighbour for the vans and for the trucks, then a hub-by-hub stock check: at every van departure the hub must already hold the goods of all vans gone so far): 3 truck trips on 3 trucks and 11 van trips on 10 vans (DS_1 4, DS_2 3, DS_3 4), with 0 violations on the local validator and the online evaluator. Any feasible solution bounds the optimum from above; the gap to the lower bound is 47.7 %. For comparison, serving every customer with its own van (35 van trips on 13 vans) is also feasible but costs 5 008.80 €. The legacy solution (2 179.90 € verified) is not feasible, so it is not an upper bound. |
+| Van driving time | 375 min, 225.00 € | Every customer is entered exactly once, from a hub or another customer; the sum of the shortest incoming arc per customer is 375 min of driving, at 0.60 €/min. |
+| Truck driving time | 305 min, 396.50 € | At least two truck trips, and every hub must be supplied (every hub dispatches vans (36) and starts with no stock). Enumerating every way to cover the three hubs with two trips, with the driving times of the duration matrix, gives a minimum of 305 min: DP → DS_1 → DS_2 → DP (238 min) and DP → DS_3 → DP (67 min). Three or more trips give at least 366 min. Cost at 1.30 €/min. |
+| Total lower bound | 2 031.50 € | 1 410.00 + 225.00 + 396.50 €. |
+| Upper bound | 3 223.40 € | Cost of the first feasible solution of our solver (nearest neighbour for the vans and for the trucks, then a hub-by-hub stock check: at every van departure the hub must already hold the goods of all vans gone so far): 3 truck trips on 3 trucks and 11 van trips on 10 vans (DS_1 5, DS_2 3, DS_3 3), with 0 violations on the local validator and the online evaluator. Any feasible solution bounds the optimum from above; the gap to the lower bound is 58.7 %. For comparison, serving every customer with its own van (35 van trips on 13 vans) is also feasible but costs 5 376.20 €. The legacy solution (2 541.20 € under version 2) is not feasible, so it is not an upper bound. |
 
 
 ## 8. Link to the Constraint Table
@@ -211,7 +211,7 @@ The bounds hold for the single-trip baseline with one fixed cost per trip. Each 
 | C12 Flexible DS assignment | (12): z_vs is a decision variable |
 | C13 Hub flow balance | (31) |
 | C14 Vehicle fixed cost | objective: y_t, y_v (one fixed cost per trip) |
-| C15 Transport cost | objective: δᵢⱼ x terms |
+| C15 Transport cost | objective: τᵢⱼ x terms |
 | C16 Total cost | objective |
 | C17 Minimum hub dispatch | (36) |
 | C18 Carrier concentration cap | (37) |

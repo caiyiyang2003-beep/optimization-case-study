@@ -23,14 +23,20 @@ python3 src/greedy_nn.py
 python3 scripts/evaluate_solution.py --instance data/instances/instance_03_medium_35pl.json --solution solutions/03_medium_35pl_greedy.json
 ```
 
-`scripts/evaluate_solution.py` is the current version from the course website (downloaded
-2026-11-03): like the online evaluator, it checks the team name, the API key and the Group 1 rules.
+`scripts/evaluate_solution.py` and `data/instances/` are the current versions from the course website
+(downloaded 2026-11-03): like the online evaluator, the validator checks the team name, the API key and
+the Group 1 rules.
+
+**Cost method "version 2" (official).** A route costs its fixed cost (280 € truck, 85 € van) plus its
+driving time from `duration_matrix_min`, at 1.30 €/min for a truck and 0.60 €/min for a van. Service and
+waiting time are not charged. A solution must contain `"version": "2"` at its root, otherwise the
+validator falls back to the legacy version 1 (Euclidean km × €/km). Our solutions include it.
 
 ## Files
 
 | File | Content |
 |---|---|
-| `src/instance_tools.py` | Reads an instance, rejects broken data, distances and travel times (rounded as the validator does), a simple lower bound |
+| `src/instance_tools.py` | Reads an instance, rejects broken data, travel times (rounded as the validator does), a simple lower bound |
 | `src/greedy_nn.py` | The solver, see "Algorithm" below |
 | `src/run_all.py` | Solves every instance, checks it with the course validator, writes the summary table |
 | `src/ils.py` | Iterated local search (work in progress, not handed in this week) |
@@ -45,6 +51,8 @@ Note: `scripts/validator_server.py` actually contains the HTML of the course web
 ## Algorithm (`greedy_nn.py`)
 
 Everything is read from the JSON file; nothing is tuned for a particular instance.
+
+"Closest" always means the shortest driving time in the duration matrix, the quantity the cost uses.
 
 1. **Vans: nearest neighbour.** A van leaves a hub and keeps driving to the closest customer it can
    still serve (capacity including pickups, time window, shift length); when none fits it returns
@@ -65,22 +73,22 @@ Everything is read from the JSON file; nothing is tuned for a particular instanc
 
 When an instance cannot be solved, the code says why instead of crashing.
 
-## Current results
+## Current results (cost method version 2)
 
 | Instance | Result | Cost (€) |
 |---|---|---|
-| 01 toy | feasible | 495.70 |
-| 02 small | feasible | 1042.00 |
-| 03 medium | feasible | 2878.40 |
-| 04 district | feasible | 3730.00 |
+| 01 toy | feasible | 494.00 |
+| 02 small | feasible | 1029.00 |
+| 03 medium | feasible | 3223.40 |
+| 04 district | feasible | 3720.60 |
 | 05 suburban | infeasible: PL_1's time window cannot be met even by a dedicated van | – |
-| 06 micro hubs | feasible | 5920.40 |
+| 06 micro hubs | feasible | 5363.40 |
 | 07 regional | infeasible: PL_14 orders 74 > van capacity 65, and Group 1 forbids splitting orders | – |
 | 08 legacy CRM | broken data: PL_18 orders 10 000 000 | – |
 | 09 urban | broken data: invalid JSON (`"demand": 23A`) | – |
-| 10 metropolis | feasible | 7919.75 |
+| 10 metropolis | feasible | 7905.30 |
 
-All 6 feasible solutions pass the online evaluator with 0 violations. Lower bounds are in
+All 6 feasible solutions pass the course validator with 0 violations. Lower bounds are in
 `solutions/summary.md` and in the Bounds section of the Doc.
 
 ## Validator vs our code
@@ -98,5 +106,5 @@ The local validator and the online evaluator check the same rules.
 
 - ILS: initial solution (the nearest neighbour above) → VND (2-opt + Or-opt, best improvement) →
   remove k random customers and reinsert them → BestBasedThreshold acceptance, stop after 60 s.
-  On medium, 60 s bring the cost from 2878.40 € to about 2600 €; results vary a lot between random seeds.
-- On instance 06, nearest-neighbour trucks cost 350 € more than the savings heuristic we used before; worth improving later.
+  On medium (version 2), 60 s bring the cost from 3223.40 € to 2502.20 € (seed 0); results vary between random seeds.
+  `solutions/03_medium_35pl_ils.json` is still an older version 1 run and has to be redone.
