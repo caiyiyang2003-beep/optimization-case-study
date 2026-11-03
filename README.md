@@ -102,9 +102,26 @@ The local validator and the online evaluator check the same rules.
 | Stock quantity | only "van leaves after the first truck arrives" | quantities checked (stricter) |
 | `max_available` | not checked | respected |
 
-## Next steps
+## ILS results (work in progress, cost method version 2)
 
-- ILS: initial solution (the nearest neighbour above) → VND (2-opt + Or-opt, best improvement) →
-  remove k random customers and reinsert them → BestBasedThreshold acceptance, stop after 60 s.
-  On medium (version 2), 60 s bring the cost from 3223.40 € to 2502.20 € (seed 0); results vary between random seeds.
-  `solutions/03_medium_35pl_ils.json` is still an older version 1 run and has to be redone.
+ILS: initial solution (the nearest neighbour above) → VND (2-opt + Or-opt, best improvement) →
+remove k random customers and reinsert them → BestBasedThreshold acceptance. Seed 0, one run per
+instance; results vary between random seeds.
+
+| Instance | Time limit | Greedy (€) | ILS (€) | Saved | Lower bound (€) | Gap to lower bound |
+|---|---|---|---|---|---|---|
+| 01 toy | 60 s | 494.00 | 494.00 | 0 % | 476.00 | 3.8 % |
+| 02 small | 60 s | 1029.00 | 959.40 | 6.8 % | 826.60 | 16.1 % |
+| 03 medium | 60 s | 3223.40 | 2502.20 | 22.4 % | 2031.50* | 23.2 % |
+| 04 district | 60 s | 3720.60 | 3348.40 | 10.0 % | 2840.20 | 17.9 % |
+| 06 micro hubs | 300 s | 5363.40 | 5259.80 | 1.9 % | 4333.80 | 21.4 % |
+| 10 metropolis | 60 s | 7905.30 | 7088.20 | 10.3 % | 5950.40 | 19.1 % |
+
+Gap = (ILS − lower bound) / lower bound. The optimum lies between the lower bound and the ILS cost,
+so the real gap to the optimum is smaller, but we cannot say by how much without an exact solver.
+The lower bounds are weak (every customer gets its cheapest incoming arc, minimum number of routes).
+\* For medium the hand-computed bound of the Doc; the simple bound of `run_all.py` is 1809.20 € (gap 38.3 %).
+
+All six solutions pass the validator (`solutions/*_ils.json`, search logs in `*_ils_progress.csv`).
+Instance 06 is slow (18 hubs: trucks and vehicles are recomputed for every cost), only about
+9 000 iterations in 300 s, so it improves little.
