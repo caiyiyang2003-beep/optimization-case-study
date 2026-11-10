@@ -201,16 +201,15 @@ class ILS:
         self.log = []
 
     def evaluate(self, routes):
-        """Total cost (vans + trucks) and the full plan, or (inf, None) if trucks/fleet fail."""
+        """Total cost (vans + trucks) and the full plan, or (inf, None) if the trucks fail."""
         s = self.solver
         try:
             vans = [(h, s.schedule(h, seq)) for h, seq in routes]
             trips = s.plan_trucks(vans)
-            vans, truck_ids, van_ids = s.assign_vehicles(routes, vans, trips)
         except Infeasible:
             return float("inf"), None
         cost = s.total_cost(routes) + sum(t["cost"] for t in trips)
-        return cost, (trips, vans, truck_ids, van_ids)
+        return cost, (trips, vans)
 
     def solve(self):
         start = time.time()

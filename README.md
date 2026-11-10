@@ -56,8 +56,10 @@ Everything is read from the JSON file; nothing is tuned for a particular instanc
 
 1. **Vans: nearest neighbour.** A van leaves a hub and keeps driving to the closest customer it can
    still serve (capacity including pickups, time window, shift length); when none fits it returns
-   and the next van starts. Service must end before the window closes (our assumption).
-2. **Group 1 repair.** Every hub sends at least 2 van trips and no hub sends more than half of them.
+   and the next van starts. A van only has to arrive before the window closes; service may end later
+   (instructor's reply).
+2. **Group 1 repair.** Every hub sends at least 2 van routes and no hub sends more than ceil(t/2) of
+   the t van routes (instructor's reply: 6 out of 11 is allowed).
    While a rule is broken, apply the cheapest move that reduces the violation:
    take one customer out of a route and serve it with its own van, from any hub.
 3. **Trucks: nearest neighbour too.** Demand above a full truckload goes first in direct trips.
@@ -66,10 +68,9 @@ Everything is read from the JSON file; nothing is tuned for a particular instanc
 4. **Stock check (model constraints 29–33).** Hub by hub: each time a van leaves, the stock unloaded
    so far must cover the goods taken by all vans gone so far. A hub that runs short gets its own
    truck trip and the trucks are planned again.
-5. **Fleet limit (constraint 34) and multiple trips.** Trips are chained onto physical vehicles so
-   that `max_available` is respected. If there are too many vans, trips leave as early as possible,
-   but never before the last truck has unloaded at their hub, so one van can run several trips. The second trip of a vehicle is named like
-   `Delivery_Van_3_T2`, and every trip pays the fixed cost again (our assumption).
+5. **One vehicle per route.** `max_available` is only indicative (instructor's reply: exceeding it is
+   not rejected) and the fixed cost is paid per route, so every route gets its own vehicle
+   (`Heavy_Truck_1`, `Delivery_Van_1`, ...) and the code does not check the fleet size.
 
 When an instance cannot be solved, the code says why instead of crashing.
 
@@ -79,16 +80,18 @@ When an instance cannot be solved, the code says why instead of crashing.
 |---|---|---|
 | 01 toy | feasible | 494.00 |
 | 02 small | feasible | 1029.00 |
-| 03 medium | feasible | 3223.40 |
+| 03 medium | feasible | 3294.00 |
 | 04 district | feasible | 3720.60 |
 | 05 suburban | infeasible: PL_1's time window cannot be met even by a dedicated van | – |
 | 06 micro hubs | feasible | 5363.40 |
 | 07 regional | infeasible: PL_14 orders 74 > van capacity 65, and Group 1 forbids splitting orders | – |
 | 08 legacy CRM | broken data: PL_18 orders 10 000 000 | – |
 | 09 urban | broken data: invalid JSON (`"demand": 23A`) | – |
-| 10 metropolis | feasible | 7905.30 |
+| 10 metropolis | feasible | 8073.50 |
 
-All 6 feasible solutions pass the course validator with 0 violations. Lower bounds are in
+All 6 feasible solutions pass the course validator with 0 violations. Relaxing the time windows
+made the nearest neighbour slightly worse on 03 and 10 (it is greedy, so looser rules can lead it to
+other choices); the ILS below removes most of that. Lower bounds are in
 `solutions/summary.md` and in the Bounds section of the Doc.
 
 ## Validator vs our code
@@ -97,10 +100,11 @@ The local validator and the online evaluator check the same rules.
 
 | Check | Validator | Our code |
 |---|---|---|
-| Group 1 rules | at least 2 van routes per hub, at most ceil(t/2) | at least 2, at most t/2 (stricter) |
-| Time windows | arrival only | service must end before the window closes (stricter) |
+| Group 1 rules | at least 2 van routes per hub, at most ceil(t/2) | same |
+| Time windows | arrival ≤ tw_close | same |
+| `max_available` | not checked | not checked (only indicative) |
+| Truck capacity | not checked | checked (stricter) |
 | Stock quantity | only "van leaves after the first truck arrives" | quantities checked (stricter) |
-| `max_available` | not checked | respected |
 
 ## ILS results (work in progress, cost method version 2)
 
@@ -112,16 +116,24 @@ instance; results vary between random seeds.
 |---|---|---|---|---|---|---|
 | 01 toy | 60 s | 494.00 | 494.00 | 0 % | 476.00 | 3.8 % |
 | 02 small | 60 s | 1029.00 | 959.40 | 6.8 % | 826.60 | 16.1 % |
-| 03 medium | 60 s | 3223.40 | 2502.20 | 22.4 % | 2031.50* | 23.2 % |
-| 04 district | 60 s | 3720.60 | 3348.40 | 10.0 % | 2840.20 | 17.9 % |
+| 03 medium | 60 s | 3294.00 | 2562.60 | 22.2 % | 2031.50* | 26.1 % |
+| 04 district | 60 s | 3720.60 | 3341.90 | 10.2 % | 2840.20 | 17.7 % |
 | 06 micro hubs | 300 s | 5363.40 | 5259.80 | 1.9 % | 4333.80 | 21.4 % |
-| 10 metropolis | 60 s | 7905.30 | 7088.20 | 10.3 % | 5950.40 | 19.1 % |
+| 10 metropolis | 60 s | 8073.50 | 7147.60 | 11.5 % | 5950.40 | 20.1 % |
 
 Gap = (ILS − lower bound) / lower bound. The optimum lies between the lower bound and the ILS cost,
 so the real gap to the optimum is smaller, but we cannot say by how much without an exact solver.
 The lower bounds are weak (every customer gets its cheapest incoming arc, minimum number of routes).
-\* For medium the hand-computed bound of the Doc; the simple bound of `run_all.py` is 1809.20 € (gap 38.3 %).
+\* For medium the hand-computed bound of the Doc; the simple bound of `run_all.py` is 1809.20 € (gap 41.6 %).
 
 All six solutions pass the validator (`solutions/*_ils.json`, search logs in `*_ils_progress.csv`).
-Instance 06 is slow (18 hubs: trucks and vehicles are recomputed for every cost), only about
-9 000 iterations in 300 s, so it improves little.
+Instance 06 is slow (18 hubs: the trucks are recomputed for every cost), only about
+8 400 iterations in 300 s, so it improves little.
+
+Results depend on the random seed. With seeds 1–3 (60 s each) medium gives 2502.80, 2773.60 and
+2503.40 €, district 3346.60, 3349.60 and 3347.20 €, metropolis 7147.60, 7111.00 and 7139.60 €.
+The table keeps seed 0 so that every result can be reproduced, for example:
+
+```bash
+python3 src/ils.py -i data/instances/instance_03_medium_35pl.json -o solutions/03_medium_35pl_ils.json --time-limit 60 --seed 0
+```

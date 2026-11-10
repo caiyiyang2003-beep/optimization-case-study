@@ -3,7 +3,7 @@
   "api_key": "sk-most-2026-titan-g1",
   "instance_id": "instance_10_metropolis_75pl",
   "version": "2",
-  "claimed_cost_cents": 790530,
+  "claimed_cost_cents": 807350,
   "routes": [
     {
       "vehicle_id": "Heavy_Truck_1",
@@ -131,21 +131,21 @@
       ]
     },
     {
-      "vehicle_id": "Delivery_Van_8",
+      "vehicle_id": "Delivery_Van_1",
       "stops": [
         {
           "node": "DS_1",
-          "arrival": 638,
-          "departure": 638
+          "arrival": 653,
+          "departure": 653
         },
         {
           "node": "PL_1",
-          "arrival": 645,
-          "departure": 660
+          "arrival": 660,
+          "departure": 675
         },
         {
           "node": "PL_25",
-          "arrival": 662,
+          "arrival": 677,
           "departure": 815
         },
         {
@@ -161,101 +161,101 @@
       ]
     },
     {
-      "vehicle_id": "Delivery_Van_11_T2",
+      "vehicle_id": "Delivery_Van_2",
       "stops": [
         {
           "node": "DS_1",
-          "arrival": 798,
-          "departure": 798
+          "arrival": 813,
+          "departure": 813
         },
         {
           "node": "PL_13",
-          "arrival": 805,
-          "departure": 820
+          "arrival": 820,
+          "departure": 835
         },
         {
           "node": "PL_14",
-          "arrival": 826,
-          "departure": 846
+          "arrival": 841,
+          "departure": 861
         },
         {
           "node": "PL_39",
-          "arrival": 935,
-          "departure": 955
+          "arrival": 950,
+          "departure": 970
         },
         {
           "node": "DS_1",
-          "arrival": 1037,
-          "departure": 1037
+          "arrival": 1052,
+          "departure": 1052
         }
       ]
     },
     {
-      "vehicle_id": "Delivery_Van_8_T2",
+      "vehicle_id": "Delivery_Van_3",
       "stops": [
         {
           "node": "DS_1",
-          "arrival": 878,
-          "departure": 878
+          "arrival": 893,
+          "departure": 893
         },
         {
           "node": "PL_19",
-          "arrival": 885,
-          "departure": 900
+          "arrival": 900,
+          "departure": 915
         },
         {
           "node": "PL_15",
-          "arrival": 915,
-          "departure": 935
+          "arrival": 930,
+          "departure": 950
         },
         {
           "node": "DS_1",
-          "arrival": 952,
-          "departure": 952
+          "arrival": 967,
+          "departure": 967
         }
       ]
     },
     {
-      "vehicle_id": "Delivery_Van_13",
+      "vehicle_id": "Delivery_Van_4",
       "stops": [
         {
           "node": "DS_1",
-          "arrival": 718,
-          "departure": 718
+          "arrival": 733,
+          "departure": 733
         },
         {
           "node": "PL_7",
-          "arrival": 725,
-          "departure": 740
+          "arrival": 740,
+          "departure": 755
         },
         {
           "node": "PL_2",
-          "arrival": 752,
-          "departure": 772
+          "arrival": 767,
+          "departure": 787
         },
         {
           "node": "DS_1",
-          "arrival": 784,
-          "departure": 784
+          "arrival": 799,
+          "departure": 799
         }
       ]
     },
     {
-      "vehicle_id": "Delivery_Van_9",
+      "vehicle_id": "Delivery_Van_5",
       "stops": [
         {
           "node": "DS_2",
-          "arrival": 638,
-          "departure": 638
+          "arrival": 653,
+          "departure": 653
         },
         {
           "node": "PL_26",
-          "arrival": 645,
-          "departure": 660
+          "arrival": 660,
+          "departure": 675
         },
         {
           "node": "PL_50",
-          "arrival": 662,
+          "arrival": 677,
           "departure": 815
         },
         {
@@ -271,96 +271,96 @@
       ]
     },
     {
-      "vehicle_id": "Delivery_Van_1_T2",
+      "vehicle_id": "Delivery_Van_6",
       "stops": [
         {
           "node": "DS_2",
-          "arrival": 718,
-          "departure": 718
+          "arrival": 733,
+          "departure": 733
         },
         {
           "node": "PL_32",
-          "arrival": 725,
-          "departure": 740
+          "arrival": 740,
+          "departure": 755
         },
         {
           "node": "PL_27",
-          "arrival": 752,
-          "departure": 772
+          "arrival": 767,
+          "departure": 787
         },
         {
           "node": "DS_2",
-          "arrival": 784,
-          "departure": 784
+          "arrival": 799,
+          "departure": 799
         }
       ]
     },
     {
-      "vehicle_id": "Delivery_Van_1_T3",
+      "vehicle_id": "Delivery_Van_7",
       "stops": [
         {
           "node": "DS_2",
-          "arrival": 798,
-          "departure": 798
+          "arrival": 813,
+          "departure": 813
         },
         {
           "node": "PL_38",
-          "arrival": 805,
-          "departure": 820
+          "arrival": 820,
+          "departure": 835
         },
         {
           "node": "PL_40",
-          "arrival": 832,
-          "departure": 852
+          "arrival": 847,
+          "departure": 867
         },
         {
           "node": "DS_2",
-          "arrival": 869,
-          "departure": 869
+          "arrival": 884,
+          "departure": 884
         }
       ]
     },
     {
-      "vehicle_id": "Delivery_Van_6_T2",
+      "vehicle_id": "Delivery_Van_8",
       "stops": [
         {
           "node": "DS_2",
-          "arrival": 745,
-          "departure": 745
+          "arrival": 760,
+          "departure": 760
         },
         {
           "node": "PL_44",
-          "arrival": 752,
-          "departure": 767
+          "arrival": 767,
+          "departure": 782
         },
         {
           "node": "PL_47",
-          "arrival": 785,
-          "departure": 800
+          "arrival": 800,
+          "departure": 815
         },
         {
           "node": "DS_2",
-          "arrival": 823,
-          "departure": 823
+          "arrival": 838,
+          "departure": 838
         }
       ]
     },
     {
-      "vehicle_id": "Delivery_Van_10",
+      "vehicle_id": "Delivery_Van_9",
       "stops": [
         {
           "node": "DS_3",
-          "arrival": 638,
-          "departure": 638
+          "arrival": 653,
+          "departure": 653
         },
         {
           "node": "PL_51",
-          "arrival": 645,
-          "departure": 660
+          "arrival": 660,
+          "departure": 675
         },
         {
           "node": "PL_75",
-          "arrival": 662,
+          "arrival": 677,
           "departure": 815
         },
         {
@@ -376,407 +376,27 @@
       ]
     },
     {
-      "vehicle_id": "Delivery_Van_3_T2",
+      "vehicle_id": "Delivery_Van_10",
       "stops": [
         {
           "node": "DS_3",
-          "arrival": 718,
-          "departure": 718
+          "arrival": 733,
+          "departure": 733
         },
         {
           "node": "PL_57",
-          "arrival": 725,
-          "departure": 740
+          "arrival": 740,
+          "departure": 755
         },
         {
           "node": "PL_52",
-          "arrival": 752,
-          "departure": 772
+          "arrival": 767,
+          "departure": 787
         },
         {
           "node": "DS_3",
-          "arrival": 784,
-          "departure": 784
-        }
-      ]
-    },
-    {
-      "vehicle_id": "Delivery_Van_3_T3",
-      "stops": [
-        {
-          "node": "DS_3",
-          "arrival": 798,
-          "departure": 798
-        },
-        {
-          "node": "PL_63",
-          "arrival": 805,
-          "departure": 820
-        },
-        {
-          "node": "PL_64",
-          "arrival": 826,
-          "departure": 846
-        },
-        {
-          "node": "DS_3",
-          "arrival": 858,
-          "departure": 858
-        }
-      ]
-    },
-    {
-      "vehicle_id": "Delivery_Van_10_T2",
-      "stops": [
-        {
-          "node": "DS_3",
-          "arrival": 878,
-          "departure": 878
-        },
-        {
-          "node": "PL_69",
-          "arrival": 885,
-          "departure": 900
-        },
-        {
-          "node": "PL_65",
-          "arrival": 915,
-          "departure": 935
-        },
-        {
-          "node": "DS_3",
-          "arrival": 952,
-          "departure": 952
-        }
-      ]
-    },
-    {
-      "vehicle_id": "Delivery_Van_5_T3",
-      "stops": [
-        {
-          "node": "DS_1",
-          "arrival": 879,
-          "departure": 879
-        },
-        {
-          "node": "PL_20",
-          "arrival": 891,
-          "departure": 911
-        },
-        {
-          "node": "PL_24",
-          "arrival": 940,
-          "departure": 960
-        },
-        {
-          "node": "DS_1",
-          "arrival": 993,
-          "departure": 993
-        }
-      ]
-    },
-    {
-      "vehicle_id": "Delivery_Van_1_T4",
-      "stops": [
-        {
-          "node": "DS_2",
-          "arrival": 879,
-          "departure": 879
-        },
-        {
-          "node": "PL_45",
-          "arrival": 891,
-          "departure": 911
-        },
-        {
-          "node": "PL_49",
-          "arrival": 940,
-          "departure": 960
-        },
-        {
-          "node": "DS_2",
-          "arrival": 993,
-          "departure": 993
-        }
-      ]
-    },
-    {
-      "vehicle_id": "Delivery_Van_3_T4",
-      "stops": [
-        {
-          "node": "DS_3",
-          "arrival": 879,
-          "departure": 879
-        },
-        {
-          "node": "PL_70",
-          "arrival": 891,
-          "departure": 911
-        },
-        {
-          "node": "PL_74",
-          "arrival": 940,
-          "departure": 960
-        },
-        {
-          "node": "DS_3",
-          "arrival": 993,
-          "departure": 993
-        }
-      ]
-    },
-    {
-      "vehicle_id": "Delivery_Van_5",
-      "stops": [
-        {
-          "node": "DS_1",
-          "arrival": 623,
-          "departure": 623
-        },
-        {
-          "node": "PL_21",
-          "arrival": 640,
-          "departure": 660
-        },
-        {
-          "node": "PL_22",
-          "arrival": 667,
-          "departure": 682
-        },
-        {
-          "node": "PL_17",
-          "arrival": 712,
-          "departure": 732
-        },
-        {
-          "node": "DS_1",
-          "arrival": 760,
-          "departure": 760
-        }
-      ]
-    },
-    {
-      "vehicle_id": "Delivery_Van_4_T2",
-      "stops": [
-        {
-          "node": "DS_1",
-          "arrival": 783,
-          "departure": 783
-        },
-        {
-          "node": "PL_3",
-          "arrival": 800,
-          "departure": 820
-        },
-        {
-          "node": "PL_5",
-          "arrival": 835,
-          "departure": 855
-        },
-        {
-          "node": "DS_1",
-          "arrival": 883,
-          "departure": 883
-        }
-      ]
-    },
-    {
-      "vehicle_id": "Delivery_Van_14",
-      "stops": [
-        {
-          "node": "DS_1",
-          "arrival": 719,
-          "departure": 719
-        },
-        {
-          "node": "PL_9",
-          "arrival": 736,
-          "departure": 756
-        },
-        {
-          "node": "PL_12",
-          "arrival": 780,
-          "departure": 800
-        },
-        {
-          "node": "DS_1",
-          "arrival": 833,
-          "departure": 833
-        }
-      ]
-    },
-    {
-      "vehicle_id": "Delivery_Van_2_T2",
-      "stops": [
-        {
-          "node": "DS_2",
-          "arrival": 783,
-          "departure": 783
-        },
-        {
-          "node": "PL_28",
-          "arrival": 800,
-          "departure": 820
-        },
-        {
-          "node": "PL_30",
-          "arrival": 835,
-          "departure": 855
-        },
-        {
-          "node": "DS_2",
-          "arrival": 883,
-          "departure": 883
-        }
-      ]
-    },
-    {
-      "vehicle_id": "Delivery_Van_15",
-      "stops": [
-        {
-          "node": "DS_2",
-          "arrival": 719,
-          "departure": 719
-        },
-        {
-          "node": "PL_34",
-          "arrival": 736,
-          "departure": 756
-        },
-        {
-          "node": "PL_37",
-          "arrival": 780,
-          "departure": 800
-        },
-        {
-          "node": "DS_2",
-          "arrival": 833,
-          "departure": 833
-        }
-      ]
-    },
-    {
-      "vehicle_id": "Delivery_Van_6",
-      "stops": [
-        {
-          "node": "DS_2",
-          "arrival": 623,
-          "departure": 623
-        },
-        {
-          "node": "PL_46",
-          "arrival": 640,
-          "departure": 660
-        },
-        {
-          "node": "PL_48",
-          "arrival": 675,
-          "departure": 695
-        },
-        {
-          "node": "DS_2",
-          "arrival": 723,
-          "departure": 723
-        }
-      ]
-    },
-    {
-      "vehicle_id": "Delivery_Van_18",
-      "stops": [
-        {
-          "node": "DS_3",
-          "arrival": 783,
-          "departure": 783
-        },
-        {
-          "node": "PL_53",
-          "arrival": 800,
-          "departure": 820
-        },
-        {
-          "node": "PL_55",
-          "arrival": 835,
-          "departure": 855
-        },
-        {
-          "node": "DS_3",
-          "arrival": 883,
-          "departure": 883
-        }
-      ]
-    },
-    {
-      "vehicle_id": "Delivery_Van_16",
-      "stops": [
-        {
-          "node": "DS_3",
-          "arrival": 719,
-          "departure": 719
-        },
-        {
-          "node": "PL_59",
-          "arrival": 736,
-          "departure": 756
-        },
-        {
-          "node": "PL_62",
-          "arrival": 780,
-          "departure": 800
-        },
-        {
-          "node": "DS_3",
-          "arrival": 833,
-          "departure": 833
-        }
-      ]
-    },
-    {
-      "vehicle_id": "Delivery_Van_7",
-      "stops": [
-        {
-          "node": "DS_3",
-          "arrival": 623,
-          "departure": 623
-        },
-        {
-          "node": "PL_71",
-          "arrival": 640,
-          "departure": 660
-        },
-        {
-          "node": "PL_72",
-          "arrival": 667,
-          "departure": 682
-        },
-        {
-          "node": "PL_67",
-          "arrival": 712,
-          "departure": 732
-        },
-        {
-          "node": "DS_3",
-          "arrival": 760,
-          "departure": 760
-        }
-      ]
-    },
-    {
-      "vehicle_id": "Delivery_Van_5_T4",
-      "stops": [
-        {
-          "node": "DS_1",
-          "arrival": 1002,
-          "departure": 1002
-        },
-        {
-          "node": "PL_10",
-          "arrival": 1025,
-          "departure": 1040
-        },
-        {
-          "node": "DS_1",
-          "arrival": 1063,
-          "departure": 1063
+          "arrival": 799,
+          "departure": 799
         }
       ]
     },
@@ -784,24 +404,24 @@
       "vehicle_id": "Delivery_Van_11",
       "stops": [
         {
-          "node": "DS_1",
-          "arrival": 682,
-          "departure": 682
+          "node": "DS_3",
+          "arrival": 813,
+          "departure": 813
         },
         {
-          "node": "PL_16",
-          "arrival": 705,
-          "departure": 720
+          "node": "PL_63",
+          "arrival": 820,
+          "departure": 835
         },
         {
-          "node": "PL_18",
-          "arrival": 737,
-          "departure": 757
+          "node": "PL_64",
+          "arrival": 841,
+          "departure": 861
         },
         {
-          "node": "DS_1",
-          "arrival": 790,
-          "departure": 790
+          "node": "DS_3",
+          "arrival": 873,
+          "departure": 873
         }
       ]
     },
@@ -809,209 +429,129 @@
       "vehicle_id": "Delivery_Van_12",
       "stops": [
         {
-          "node": "DS_1",
-          "arrival": 711,
-          "departure": 711
-        },
-        {
-          "node": "PL_4",
-          "arrival": 734,
-          "departure": 749
-        },
-        {
-          "node": "PL_43",
-          "arrival": 860,
-          "departure": 880
-        },
-        {
-          "node": "DS_1",
-          "arrival": 984,
-          "departure": 984
-        }
-      ]
-    },
-    {
-      "vehicle_id": "Delivery_Van_2_T3",
-      "stops": [
-        {
-          "node": "DS_2",
-          "arrival": 922,
-          "departure": 922
-        },
-        {
-          "node": "PL_29",
-          "arrival": 945,
-          "departure": 960
-        },
-        {
-          "node": "DS_2",
-          "arrival": 983,
-          "departure": 983
-        }
-      ]
-    },
-    {
-      "vehicle_id": "Delivery_Van_9_T2",
-      "stops": [
-        {
-          "node": "DS_2",
-          "arrival": 1002,
-          "departure": 1002
-        },
-        {
-          "node": "PL_35",
-          "arrival": 1025,
-          "departure": 1040
-        },
-        {
-          "node": "DS_2",
-          "arrival": 1063,
-          "departure": 1063
-        }
-      ]
-    },
-    {
-      "vehicle_id": "Delivery_Van_1",
-      "stops": [
-        {
-          "node": "DS_2",
-          "arrival": 536,
-          "departure": 536
-        },
-        {
-          "node": "PL_41",
-          "arrival": 559,
-          "departure": 574
-        },
-        {
-          "node": "PL_42",
-          "arrival": 582,
-          "departure": 602
-        },
-        {
-          "node": "PL_36",
-          "arrival": 640,
-          "departure": 660
-        },
-        {
-          "node": "DS_2",
-          "arrival": 688,
-          "departure": 688
-        }
-      ]
-    },
-    {
-      "vehicle_id": "Delivery_Van_7_T2",
-      "stops": [
-        {
           "node": "DS_3",
-          "arrival": 767,
-          "departure": 767
+          "arrival": 893,
+          "departure": 893
         },
         {
-          "node": "PL_54",
-          "arrival": 790,
-          "departure": 805
+          "node": "PL_69",
+          "arrival": 900,
+          "departure": 915
         },
         {
-          "node": "PL_68",
-          "arrival": 860,
-          "departure": 880
+          "node": "PL_65",
+          "arrival": 930,
+          "departure": 950
         },
         {
           "node": "DS_3",
-          "arrival": 913,
-          "departure": 913
+          "arrival": 967,
+          "departure": 967
         }
       ]
     },
     {
-      "vehicle_id": "Delivery_Van_10_T3",
+      "vehicle_id": "Delivery_Van_13",
       "stops": [
         {
-          "node": "DS_3",
-          "arrival": 1002,
-          "departure": 1002
+          "node": "DS_1",
+          "arrival": 899,
+          "departure": 899
         },
         {
-          "node": "PL_60",
-          "arrival": 1025,
-          "departure": 1040
+          "node": "PL_20",
+          "arrival": 911,
+          "departure": 931
         },
         {
-          "node": "DS_3",
-          "arrival": 1063,
-          "departure": 1063
+          "node": "PL_24",
+          "arrival": 960,
+          "departure": 980
+        },
+        {
+          "node": "DS_1",
+          "arrival": 1013,
+          "departure": 1013
         }
       ]
     },
     {
-      "vehicle_id": "Delivery_Van_3",
+      "vehicle_id": "Delivery_Van_14",
       "stops": [
         {
-          "node": "DS_3",
-          "arrival": 572,
-          "departure": 572
+          "node": "DS_2",
+          "arrival": 899,
+          "departure": 899
         },
         {
-          "node": "PL_66",
-          "arrival": 595,
-          "departure": 610
+          "node": "PL_45",
+          "arrival": 911,
+          "departure": 931
         },
         {
-          "node": "PL_61",
-          "arrival": 640,
-          "departure": 660
+          "node": "PL_49",
+          "arrival": 960,
+          "departure": 980
         },
         {
-          "node": "DS_3",
-          "arrival": 688,
-          "departure": 688
+          "node": "DS_2",
+          "arrival": 1013,
+          "departure": 1013
         }
       ]
     },
     {
-      "vehicle_id": "Delivery_Van_4",
+      "vehicle_id": "Delivery_Van_15",
       "stops": [
         {
-          "node": "DS_1",
-          "arrival": 612,
-          "departure": 612
+          "node": "DS_3",
+          "arrival": 899,
+          "departure": 899
         },
         {
-          "node": "PL_11",
-          "arrival": 640,
-          "departure": 660
+          "node": "PL_70",
+          "arrival": 911,
+          "departure": 931
         },
         {
-          "node": "PL_6",
-          "arrival": 696,
-          "departure": 716
+          "node": "PL_74",
+          "arrival": 960,
+          "departure": 980
         },
         {
-          "node": "DS_1",
-          "arrival": 749,
-          "departure": 749
+          "node": "DS_3",
+          "arrival": 1013,
+          "departure": 1013
         }
       ]
     },
     {
-      "vehicle_id": "Delivery_Van_5_T2",
+      "vehicle_id": "Delivery_Van_16",
       "stops": [
         {
           "node": "DS_1",
-          "arrival": 772,
-          "departure": 772
+          "arrival": 643,
+          "departure": 643
         },
         {
-          "node": "PL_23",
-          "arrival": 800,
-          "departure": 820
+          "node": "PL_21",
+          "arrival": 660,
+          "departure": 680
+        },
+        {
+          "node": "PL_22",
+          "arrival": 687,
+          "departure": 702
+        },
+        {
+          "node": "PL_17",
+          "arrival": 732,
+          "departure": 752
         },
         {
           "node": "DS_1",
-          "arrival": 848,
-          "departure": 848
+          "arrival": 780,
+          "departure": 780
         }
       ]
     },
@@ -1019,44 +559,489 @@
       "vehicle_id": "Delivery_Van_17",
       "stops": [
         {
-          "node": "DS_3",
-          "arrival": 772,
-          "departure": 772
+          "node": "DS_1",
+          "arrival": 803,
+          "departure": 803
         },
         {
-          "node": "PL_73",
+          "node": "PL_3",
+          "arrival": 820,
+          "departure": 840
+        },
+        {
+          "node": "PL_5",
+          "arrival": 855,
+          "departure": 875
+        },
+        {
+          "node": "DS_1",
+          "arrival": 903,
+          "departure": 903
+        }
+      ]
+    },
+    {
+      "vehicle_id": "Delivery_Van_18",
+      "stops": [
+        {
+          "node": "DS_1",
+          "arrival": 739,
+          "departure": 739
+        },
+        {
+          "node": "PL_9",
+          "arrival": 756,
+          "departure": 776
+        },
+        {
+          "node": "PL_12",
+          "arrival": 800,
+          "departure": 820
+        },
+        {
+          "node": "DS_1",
+          "arrival": 853,
+          "departure": 853
+        }
+      ]
+    },
+    {
+      "vehicle_id": "Delivery_Van_19",
+      "stops": [
+        {
+          "node": "DS_2",
+          "arrival": 803,
+          "departure": 803
+        },
+        {
+          "node": "PL_28",
+          "arrival": 820,
+          "departure": 840
+        },
+        {
+          "node": "PL_30",
+          "arrival": 855,
+          "departure": 875
+        },
+        {
+          "node": "DS_2",
+          "arrival": 903,
+          "departure": 903
+        }
+      ]
+    },
+    {
+      "vehicle_id": "Delivery_Van_20",
+      "stops": [
+        {
+          "node": "DS_2",
+          "arrival": 739,
+          "departure": 739
+        },
+        {
+          "node": "PL_34",
+          "arrival": 756,
+          "departure": 776
+        },
+        {
+          "node": "PL_37",
+          "arrival": 800,
+          "departure": 820
+        },
+        {
+          "node": "DS_2",
+          "arrival": 853,
+          "departure": 853
+        }
+      ]
+    },
+    {
+      "vehicle_id": "Delivery_Van_21",
+      "stops": [
+        {
+          "node": "DS_2",
+          "arrival": 643,
+          "departure": 643
+        },
+        {
+          "node": "PL_46",
+          "arrival": 660,
+          "departure": 680
+        },
+        {
+          "node": "PL_48",
+          "arrival": 695,
+          "departure": 715
+        },
+        {
+          "node": "DS_2",
+          "arrival": 743,
+          "departure": 743
+        }
+      ]
+    },
+    {
+      "vehicle_id": "Delivery_Van_22",
+      "stops": [
+        {
+          "node": "DS_3",
+          "arrival": 803,
+          "departure": 803
+        },
+        {
+          "node": "PL_53",
+          "arrival": 820,
+          "departure": 840
+        },
+        {
+          "node": "PL_55",
+          "arrival": 855,
+          "departure": 875
+        },
+        {
+          "node": "DS_3",
+          "arrival": 903,
+          "departure": 903
+        }
+      ]
+    },
+    {
+      "vehicle_id": "Delivery_Van_23",
+      "stops": [
+        {
+          "node": "DS_3",
+          "arrival": 739,
+          "departure": 739
+        },
+        {
+          "node": "PL_59",
+          "arrival": 756,
+          "departure": 776
+        },
+        {
+          "node": "PL_62",
           "arrival": 800,
           "departure": 820
         },
         {
           "node": "DS_3",
-          "arrival": 848,
-          "departure": 848
+          "arrival": 853,
+          "departure": 853
         }
       ]
     },
     {
-      "vehicle_id": "Delivery_Van_2",
+      "vehicle_id": "Delivery_Van_24",
+      "stops": [
+        {
+          "node": "DS_3",
+          "arrival": 643,
+          "departure": 643
+        },
+        {
+          "node": "PL_71",
+          "arrival": 660,
+          "departure": 680
+        },
+        {
+          "node": "PL_72",
+          "arrival": 687,
+          "departure": 702
+        },
+        {
+          "node": "PL_67",
+          "arrival": 732,
+          "departure": 752
+        },
+        {
+          "node": "DS_3",
+          "arrival": 780,
+          "departure": 780
+        }
+      ]
+    },
+    {
+      "vehicle_id": "Delivery_Van_25",
+      "stops": [
+        {
+          "node": "DS_1",
+          "arrival": 795,
+          "departure": 795
+        },
+        {
+          "node": "PL_10",
+          "arrival": 818,
+          "departure": 833
+        },
+        {
+          "node": "PL_18",
+          "arrival": 880,
+          "departure": 900
+        },
+        {
+          "node": "DS_1",
+          "arrival": 933,
+          "departure": 933
+        }
+      ]
+    },
+    {
+      "vehicle_id": "Delivery_Van_26",
+      "stops": [
+        {
+          "node": "DS_1",
+          "arrival": 483,
+          "departure": 483
+        },
+        {
+          "node": "PL_16",
+          "arrival": 506,
+          "departure": 521
+        },
+        {
+          "node": "PL_11",
+          "arrival": 551,
+          "departure": 571
+        },
+        {
+          "node": "PL_36",
+          "arrival": 660,
+          "departure": 680
+        },
+        {
+          "node": "DS_1",
+          "arrival": 742,
+          "departure": 742
+        }
+      ]
+    },
+    {
+      "vehicle_id": "Delivery_Van_27",
+      "stops": [
+        {
+          "node": "DS_1",
+          "arrival": 731,
+          "departure": 731
+        },
+        {
+          "node": "PL_4",
+          "arrival": 754,
+          "departure": 769
+        },
+        {
+          "node": "PL_43",
+          "arrival": 880,
+          "departure": 900
+        },
+        {
+          "node": "DS_1",
+          "arrival": 1004,
+          "departure": 1004
+        }
+      ]
+    },
+    {
+      "vehicle_id": "Delivery_Van_28",
       "stops": [
         {
           "node": "DS_2",
-          "arrival": 558,
-          "departure": 558
+          "arrival": 699,
+          "departure": 699
         },
         {
-          "node": "PL_31",
-          "arrival": 591,
-          "departure": 611
+          "node": "PL_29",
+          "arrival": 722,
+          "departure": 737
         },
         {
-          "node": "PL_56",
-          "arrival": 700,
-          "departure": 720
+          "node": "PL_68",
+          "arrival": 880,
+          "departure": 900
         },
         {
           "node": "DS_2",
-          "arrival": 783,
-          "departure": 783
+          "arrival": 1021,
+          "departure": 1021
+        }
+      ]
+    },
+    {
+      "vehicle_id": "Delivery_Van_29",
+      "stops": [
+        {
+          "node": "DS_2",
+          "arrival": 1017,
+          "departure": 1017
+        },
+        {
+          "node": "PL_35",
+          "arrival": 1040,
+          "departure": 1055
+        },
+        {
+          "node": "DS_2",
+          "arrival": 1078,
+          "departure": 1078
+        }
+      ]
+    },
+    {
+      "vehicle_id": "Delivery_Van_30",
+      "stops": [
+        {
+          "node": "DS_2",
+          "arrival": 519,
+          "departure": 519
+        },
+        {
+          "node": "PL_41",
+          "arrival": 542,
+          "departure": 557
+        },
+        {
+          "node": "PL_42",
+          "arrival": 565,
+          "departure": 585
+        },
+        {
+          "node": "PL_61",
+          "arrival": 660,
+          "departure": 680
+        },
+        {
+          "node": "DS_2",
+          "arrival": 779,
+          "departure": 779
+        }
+      ]
+    },
+    {
+      "vehicle_id": "Delivery_Van_31",
+      "stops": [
+        {
+          "node": "DS_3",
+          "arrival": 937,
+          "departure": 937
+        },
+        {
+          "node": "PL_54",
+          "arrival": 960,
+          "departure": 975
+        },
+        {
+          "node": "DS_3",
+          "arrival": 998,
+          "departure": 998
+        }
+      ]
+    },
+    {
+      "vehicle_id": "Delivery_Van_32",
+      "stops": [
+        {
+          "node": "DS_3",
+          "arrival": 1017,
+          "departure": 1017
+        },
+        {
+          "node": "PL_60",
+          "arrival": 1040,
+          "departure": 1055
+        },
+        {
+          "node": "DS_3",
+          "arrival": 1078,
+          "departure": 1078
+        }
+      ]
+    },
+    {
+      "vehicle_id": "Delivery_Van_33",
+      "stops": [
+        {
+          "node": "DS_3",
+          "arrival": 629,
+          "departure": 629
+        },
+        {
+          "node": "PL_66",
+          "arrival": 652,
+          "departure": 667
+        },
+        {
+          "node": "PL_56",
+          "arrival": 720,
+          "departure": 740
+        },
+        {
+          "node": "DS_3",
+          "arrival": 773,
+          "departure": 773
+        }
+      ]
+    },
+    {
+      "vehicle_id": "Delivery_Van_34",
+      "stops": [
+        {
+          "node": "DS_1",
+          "arrival": 792,
+          "departure": 792
+        },
+        {
+          "node": "PL_23",
+          "arrival": 820,
+          "departure": 840
+        },
+        {
+          "node": "DS_1",
+          "arrival": 868,
+          "departure": 868
+        }
+      ]
+    },
+    {
+      "vehicle_id": "Delivery_Van_35",
+      "stops": [
+        {
+          "node": "DS_3",
+          "arrival": 792,
+          "departure": 792
+        },
+        {
+          "node": "PL_73",
+          "arrival": 820,
+          "departure": 840
+        },
+        {
+          "node": "DS_3",
+          "arrival": 868,
+          "departure": 868
+        }
+      ]
+    },
+    {
+      "vehicle_id": "Delivery_Van_36",
+      "stops": [
+        {
+          "node": "DS_1",
+          "arrival": 578,
+          "departure": 578
+        },
+        {
+          "node": "PL_6",
+          "arrival": 611,
+          "departure": 631
+        },
+        {
+          "node": "PL_31",
+          "arrival": 720,
+          "departure": 740
+        },
+        {
+          "node": "DS_1",
+          "arrival": 822,
+          "departure": 822
         }
       ]
     }

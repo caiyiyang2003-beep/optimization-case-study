@@ -24,8 +24,6 @@ class Instance:
     min_v: int           # van cost per minute of driving (cents), cost method V2
     dmax_t: int          # max truck shift (min)
     dmax_v: int          # max van shift (min)
-    nmax_t: object       # max number of truck trips, None when the instance gives none
-    nmax_v: object       # max number of van trips, None when the instance gives none
 
     # Geometry: Euclidean distance rounded to whole km, as in evaluate_solution.py
     def dist(self, u, v):
@@ -108,7 +106,6 @@ def load_instance(path):
         min_t=cents(e1, "cost_per_minute_cents", "cost_per_minute", 1.30),
         min_v=cents(e2, "cost_per_minute_cents", "cost_per_minute", 0.60),
         dmax_t=e1.get("max_duration", 600), dmax_v=e2.get("max_duration", 480),
-        nmax_t=e1.get("max_available"), nmax_v=e2.get("max_available"),
     )
 
     # Structural and physical checks: an instance failing them has no feasible solution.
@@ -123,8 +120,8 @@ def load_instance(path):
         if n["demand"] > inst.cap_v or n["pickup"] > inst.cap_v:
             problems.append(f"{c}: order of {n['demand']} delivered / {n['pickup']} collected exceeds the "
                             f"van capacity {inst.cap_v}, and orders cannot be split")
-        if n["tw_open"] + n["service_time"] > n["tw_close"]:
-            problems.append(f"{c}: time window [{n['tw_open']}, {n['tw_close']}] shorter than its service time")
+        if n["tw_open"] > n["tw_close"]:
+            problems.append(f"{c}: time window [{n['tw_open']}, {n['tw_close']}] closes before it opens")
     if problems:
         raise InstanceError("; ".join(problems))
 

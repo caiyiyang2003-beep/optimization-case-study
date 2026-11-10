@@ -28,13 +28,13 @@ def run_one(path):
     with open(path, encoding="utf-8") as f:
         res = evaluate_solution(json.load(f), r["solution"])
     lb = simple_lower_bound(inst, 2 if len(inst.hubs) > 1 else 0)
-    return [name, "solved", f"{r['truck_trips']} on {r['trucks']}", f"{r['van_trips']} on {r['vans']}",
+    return [name, "solved", r["truck_trips"], r["van_trips"],
             f"{res['calculatedCostEur']:.2f}", f"{lb / 100:.2f}", "OK" if res["isValid"] else "NO",
             "; ".join(res["violations"][:2])]
 
 
 def main():
-    head = ["Instance", "Status", "Truck trips on trucks", "Van trips on vans", "Cost (EUR)",
+    head = ["Instance", "Status", "Truck routes", "Van routes", "Cost (EUR)",
             "Lower bound (EUR)", "Validator", "Note"]
     rows = [run_one(p) for p in sorted(glob.glob(os.path.join(INSTANCES, "*.json")))]
     table = "\n".join(["| " + " | ".join(head) + " |", "|" + "---|" * len(head)] +
