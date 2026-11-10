@@ -15,8 +15,8 @@ All times are in minutes from midnight, all costs in cents (same units as the va
 | C | customers (PL), \|C\| = 35 in the medium instance |
 | N¹ = {0} ∪ H | nodes of the truck network (tier 1) |
 | N² = H ∪ C | nodes of the van network (tier 2) |
-| T | available trucks, \|T\| = 5 (max_available) |
-| V | available vans, \|V\| = 15 (max_available) |
+| T | truck routes; \|T\| is only an upper bound on their number, and each route is run by its own truck |
+| V | van routes; \|V\| is only an upper bound on their number, and each route is run by its own van |
 
 ## 2. Parameters (Data)
 
@@ -100,7 +100,7 @@ In euros: 280 Σ y_t + 85 Σ y_v + 1.30 Σ τᵢⱼ x_tij + 0.60 Σ τᵢⱼ x_v
 | (7) | U_ts ≥ S_t + τ₀ₛ − M(1 − x_t0s)  ∀t, s ∈ H | arrival time at the first hub |
 | (8) | U_tj ≥ U_ti + sᵢ + τᵢⱼ − M(1 − x_tij)  ∀t, i, j ∈ H, i ≠ j | time propagation between hubs (also removes subtours) |
 | (9) | E_t ≥ U_ts + sₛ + τₛ₀ − M(1 − x_ts0)  ∀t, s ∈ H | return time to the DP |
-| (10) | aₛ ≤ U_ts,  U_ts + sₛ ≤ bₛ + M(1 − Σ_{i∈N¹} x_tis)  ∀t, s ∈ H | unloading happens inside the hub window (C6) |
+| (10) | aₛ ≤ U_ts ≤ bₛ + M(1 − Σ_{i∈N¹} x_tis)  ∀t, s ∈ H | the truck arrives before the hub closes; unloading may end after closing (C6) |
 | (11) | E_t − S_t ≤ D^T  ∀t ∈ T | max truck duration, 600 min (C7) |
 
 ### C. Van routing (tier 2)
@@ -131,7 +131,7 @@ In euros: 280 Σ y_t + 85 Σ y_v + 1.30 Σ τᵢⱼ x_tij + 0.60 Σ τᵢⱼ x_v
 | (23) | Tⱼ ≥ S_v + τₛⱼ − M(1 − x_vsj)  ∀v, s ∈ H, j ∈ C | arrival at the first customer |
 | (24) | Tⱼ ≥ Tᵢ + sᵢ + τᵢⱼ − M(1 − Σ_{v∈V} x_vij)  ∀i, j ∈ C, i ≠ j | time propagation (also removes subtours) |
 | (25) | E_v ≥ Tᵢ + sᵢ + τᵢₛ − M(1 − x_vis)  ∀v, i ∈ C, s ∈ H | return time to the hub |
-| (26) | aⱼ ≤ Tⱼ,  Tⱼ + sⱼ ≤ bⱼ  ∀j ∈ C | the whole service lies inside the customer window; early arrival means waiting (C6) |
+| (26) | aⱼ ≤ Tⱼ ≤ bⱼ  ∀j ∈ C | service starts inside the customer window, so the van arrives before it closes; service may end after closing, and an early van waits (C6) |
 | (27) | S_v ≥ aₛ − M(1 − z_vs),  E_v ≤ bₛ + M(1 − z_vs)  ∀v, s ∈ H | the van leaves after the hub opens and is back before it closes |
 | (28) | E_v − S_v ≤ D^V  ∀v ∈ V | max van shift, 480 min, including travel, service and waiting (C7) |
 
@@ -154,33 +154,33 @@ Several trucks may feed the same hub (C3).
 
 | # | Constraint | Meaning |
 |---|---|---|
-| (34) | Σ_{t∈T} y_t ≤ 5,  Σ_{v∈V} y_v ≤ 15 | fleet limits (C5): at most 5 truck trips and 15 van trips; already implied by \|T\| = 5 and \|V\| = 15 |
+| (34) | none | no fleet limit (C5): max_available (5 trucks, 15 vans) is only indicative, and exceeding it is not rejected (instructor's reply) |
 | (35) | y_t ≥ y_{t+1},  y_v ≥ y_{v+1} | optional symmetry breaking (speeds up the solver) |
-| (36) | Σ_{v∈V} z_vs ≥ 2  ∀s ∈ H | every hub dispatches at least 2 vans (C17) |
-| (37) | 2 Σ_{v∈V} z_vs ≤ Σ_{v∈V} y_v  ∀s ∈ H | no hub runs more than half of the vans (C18) |
+| (36) | Σ_{v∈V} z_vs ≥ 2  ∀s ∈ H | every hub dispatches at least 2 van routes (C17) |
+| (37) | 2 Σ_{v∈V} z_vs ≤ Σ_{v∈V} y_v + 1  ∀s ∈ H | no hub runs more than ⌈t / 2⌉ of the t van routes, e.g. 6 out of 11 (C18) |
 | (38) | x, y, z, w, g ∈ {0,1};  q, f, L, ℓ, S, U, E, T ≥ 0 | variable domains |
 
 
 
 ## 6. Modelling Assumptions
 
-1. **Single-trip baseline.** Each vehicle index performs at most one trip, and its fixed cost F^T or F^V is charged once for that trip, as the validator charges once per route. The fleet limits (34) therefore bound the number of trips: at most 5 truck trips and 15 van trips. Several trips by the same physical vehicle are not modelled. The lower bounds (2 truck trips, 10 van trips) do not prove that this baseline is feasible, because time windows, shift limits and the carrier rules may require more vehicles; feasibility is checked by the first greedy solution. If more trips are needed, the extension gives each physical vehicle k ordered trips r = 1, …, R_k and adds: S_k,r+1 ≥ E_k,r + s₀ for a truck (reload at the DP) or S_k,r+1 ≥ E_k,r for a van (no overlap); E_k,R − S_k,1 ≤ D^T or D^V (daily shift); all trips of one van start from the same hub (C19).
-2. **Hub visits.** In one tour a truck visits each hub at most once. A hub can still be supplied several times a day by different trucks (or by different trips in the extension).
-3. **Time windows.** Service must start no earlier than aᵢ and finish no later than bᵢ. The local validator only checks arrival ≤ bᵢ, so a solution that meets this rule also passes it.
+1. **One vehicle per route.** max_available is only indicative: exceeding it is not rejected, whereas leaving a customer unserved is (instructor's reply). Every route therefore gets its own vehicle, we use as many routes as needed to serve all the demand, and the fleet is not limited. Each route pays its fixed cost, and the shift limits (11) and (28) apply to each route, as in the validator.
+2. **Hub visits.** In one tour a truck visits each hub at most once. A hub can still be supplied several times a day by different trucks.
+3. **Time windows.** Service starts no earlier than aᵢ (an early vehicle waits), and the vehicle must arrive no later than bᵢ; service may end after bᵢ. This is the standard VRPTW convention confirmed by the instructor, and it is what the validator checks.
 4. **Shift start and end.**
    - A truck's shift starts when it leaves the DP; loading at the DP (s₀) is not counted, as in the validator.
    - A van's shift starts when it leaves its hub. Loading a van takes no modelled time, and unloading pickups at the hub takes none either.
 5. **Cost method.** Variable costs follow the course standard "version 2": each leg is charged its driving time τᵢⱼ from the duration matrix, at 1.30 €/min for a truck and 0.60 €/min for a van; service and waiting time are not charged. The Euclidean distance δᵢⱼ is no longer used in the cost.
 6. **Truck capacity.** Constraint (4) is enforced even though the local validator does not check it.
-7. **Carrier agreements (Group 1).** The memo requires a minimum dispatch volume at every active hub, without giving a number, and forbids any carrier from handling more than half of the vans. The online evaluator for team1 checks two rules: every hub, even an otherwise unused one, has at least 2 van routes, and no hub has more than ⌈t/2⌉ van routes, where t is the total number of van routes. We use the stricter version of each rule, so that a solution satisfies both: every hub dispatches at least 2 vans (36), and no hub dispatches more than half of the vans (37). Vans are counted as van routes, as in the evaluator. A van works only for the carrier of its hub (C19).
-8. **Pickups.** Packages collected from customers are unloaded at the van's hub when it returns and stay there; they are not carried back to the DP on the same day, so they use no truck capacity and add no truck timing constraint.
+7. **Carrier agreements (Group 1).** The memo requires a minimum dispatch volume at every active hub, without giving a number, and forbids any carrier from handling more than half of the vans. The online evaluator for team1 checks two rules: every hub, even an otherwise unused one, has at least 2 van routes, and no hub has more than ⌈t/2⌉ van routes, where t is the total number of van routes. The instructor confirmed that these are the rules to use: every hub dispatches at least 2 van routes (36), and no hub dispatches more than ⌈t / 2⌉ of them (37); for example, 6 out of 11 is allowed. Vans are counted as van routes, as in the evaluator. A van works only for the carrier of its hub (C19).
+8. **Pickups.** Packages collected from customers are unloaded at the van's hub when it returns and stay there; they are not carried back to the DP on the same day, so they use no truck capacity and add no truck timing constraint. The instructor confirmed this.
 9. **Opening hours.** Hub and depot time windows come from the instance file, which the validator checks and which matches the medium-instance map on the course page: DP 06:00–20:00, DS_1 and DS_2 07:00–18:00, DS_3 07:00–19:00.
-10. **Fixed cost unit.** The fleet table of the course page quotes the fixed costs per day (280 € and 85 €), whereas the validator charges them per route. We adopt the validator's rule: one fixed cost per trip. Under the single-trip baseline both readings give the same cost; they would differ only for a vehicle running several trips.
+10. **Fixed cost unit.** The fleet table of the course page quotes the fixed costs per day (280 € and 85 €), whereas the validator charges them per route. The instructor confirmed the per-route rule: 280 € per truck route and 85 € per van route.
 11. **Instance scope.** The model and the bounds are stated for the medium instance (1 DP, 3 DS, 35 customers), which our group submits. Constraints (36) and (37) need several hubs, so they are switched off when the code is tested on the toy instance, which has a single hub; the evaluator also applies them only to instances with more than one hub.
 
 ## 7. Bounds (medium instance)
 
-The bounds hold for the single-trip baseline with one fixed cost per trip. Each one keeps only the constraints it relies on, so it is valid for every feasible solution of the medium instance. Driving times come from the duration matrix and are charged per minute, as in the validator (version 2).
+The bounds count routes, with one fixed cost per route. Each one keeps only the constraints it relies on, so it is valid for every feasible solution of the medium instance. Driving times come from the duration matrix and are charged per minute, as in the validator (version 2).
 
 | Bound | Value | Justification |
 |---|---|---|
@@ -190,7 +190,7 @@ The bounds hold for the single-trip baseline with one fixed cost per trip. Each 
 | Van driving time | 375 min, 225.00 € | Every customer is entered exactly once, from a hub or another customer; the sum of the shortest incoming arc per customer is 375 min of driving, at 0.60 €/min. |
 | Truck driving time | 305 min, 396.50 € | At least two truck trips, and every hub must be supplied (every hub dispatches vans (36) and starts with no stock). Enumerating every way to cover the three hubs with two trips, with the driving times of the duration matrix, gives a minimum of 305 min: DP → DS_1 → DS_2 → DP (238 min) and DP → DS_3 → DP (67 min). Three or more trips give at least 366 min. Cost at 1.30 €/min. |
 | Total lower bound | 2 031.50 € | 1 410.00 + 225.00 + 396.50 €. |
-| Upper bound | 3 223.40 € | Cost of the first feasible solution of our solver (nearest neighbour for the vans and for the trucks, then a hub-by-hub stock check: at every van departure the hub must already hold the goods of all vans gone so far): 3 truck trips on 3 trucks and 11 van trips on 10 vans (DS_1 5, DS_2 3, DS_3 3), with 0 violations on the local validator and the online evaluator. Any feasible solution bounds the optimum from above; the gap to the lower bound is 58.7 %. For comparison, serving every customer with its own van (35 van trips on 13 vans) is also feasible but costs 5 376.20 €. The legacy solution (2 541.20 € under version 2) is not feasible, so it is not an upper bound. |
+| Upper bound | 3 294.00 € | Cost of the first feasible solution of our solver (nearest neighbour for the vans and for the trucks, then a hub-by-hub stock check: at every van departure the hub must already hold the goods of all vans gone so far): 3 truck routes and 12 van routes (DS_1 5, DS_2 3, DS_3 4), with 0 violations on the local validator and the online evaluator. Any feasible solution bounds the optimum from above; the gap to the lower bound is 62.1 %. Our ILS (60 s, seed 0) improves it to 2 562.60 €, with 2 truck routes and 11 van routes (DS_1 6, DS_2 2, DS_3 3, allowed by the ⌈t / 2⌉ rule), a gap of 26.1 %. For comparison, serving every customer with its own van (35 van routes) is also feasible but costs 5 376.20 €. The legacy solution (2 541.20 € under version 2) is not feasible, so it is not an upper bound. |
 
 
 ## 8. Link to the Constraint Table
@@ -199,9 +199,9 @@ The bounds hold for the single-trip baseline with one fixed cost per trip. Each 
 |---|---|
 | C1 Initial hub stock = 0 | (29) |
 | C2 Truck–van synchronization | (32), (33) |
-| C3 Truck multiple visits | (31) allows several trucks per hub; multi-trip extension |
+| C3 Truck multiple visits | (31) allows several trucks per hub |
 | C4 No truck reloading | (1), (2): one departure and one return per tour |
-| C5 Fleet limit | (34) |
+| C5 Fleet limit | (34): none, max_available is only indicative |
 | C6 Time window | (6), (10), (26), (27) |
 | C7 Max route duration | (11), (28) |
 | C8 Vehicle capacity | (4), (19), (22) |
@@ -210,7 +210,7 @@ The bounds hold for the single-trip baseline with one fixed cost per trip. Each 
 | C11 No split delivery | (16) |
 | C12 Flexible DS assignment | (12): z_vs is a decision variable |
 | C13 Hub flow balance | (31) |
-| C14 Vehicle fixed cost | objective: y_t, y_v (one fixed cost per trip) |
+| C14 Vehicle fixed cost | objective: y_t, y_v (one fixed cost per route) |
 | C15 Transport cost | objective: τᵢⱼ x terms |
 | C16 Total cost | objective |
 | C17 Minimum hub dispatch | (36) |
