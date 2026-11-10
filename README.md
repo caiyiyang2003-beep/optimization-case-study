@@ -39,10 +39,12 @@ validator falls back to the legacy version 1 (Euclidean km × €/km). Our solut
 | `src/instance_tools.py` | Reads an instance, rejects broken data, travel times (rounded as the validator does), a simple lower bound |
 | `src/greedy_nn.py` | The solver, see "Algorithm" below |
 | `src/run_all.py` | Solves every instance, checks it with the course validator, writes the summary table |
+| `src/clean_instances.py` | Writes cleaned copies of the broken instances 05, 07, 08, 09 to `data/cleaned/` |
 | `src/ils.py` | Iterated local search (work in progress, not handed in this week) |
 | `src/tune_vnd.py` | Experiment used to choose the ILS neighbourhoods, results in `solutions/vnd_comparison.md` |
 | `scripts/` | Scripts from the course: `evaluate_solution.py` (validator), `load_data.py`, `plot_instance.py` |
 | `data/instances/` | The 10 instances from the course website |
+| `data/cleaned/` | Our cleaned versions of 05, 07, 08, 09 (each file lists its changes in `metadata.cleaning_log`) |
 | `data/medium_35pl/` etc. | The first 3 instances, the legacy solution and its classified violations |
 | `solutions/*_greedy.json` | Our current solutions (team name and API key already filled in) |
 
@@ -93,6 +95,23 @@ All 6 feasible solutions pass the course validator with 0 violations. Relaxing t
 made the nearest neighbour slightly worse on 03 and 10 (it is greedy, so looser rules can lead it to
 other choices); the ILS below removes most of that. Lower bounds are in
 `solutions/summary.md` and in the Bounds section of the Doc.
+
+## Cleaned instances (our assumptions)
+
+The evaluator accepts a custom instance JSON. We found no corrected versions of 05, 07, 08 and 09 on
+the course website or elsewhere, so `python3 src/clean_instances.py` makes the smallest change that
+makes each one usable. The originals are not changed. These are our assumptions, not fixes confirmed
+by the instructor.
+
+| Instance | Change | Why | Greedy (€) | ILS 60 s (€) |
+|---|---|---|---|---|
+| 05 suburban | PL_1 tw_close 450 → 480 | earliest possible arrival is 465; 480 = next half hour | 4632.80 | 4251.00 |
+| 07 regional | PL_14 demand 74 → 65 | one van carries at most 65 and orders cannot be split (9 packages left out) | 5938.00 | 5834.40 |
+| 08 legacy CRM | PL_18 demand 10 000 000 → 20 | data-entry error; 20 = median of the other 59 customers | 4772.80 | 4643.80 |
+| 09 urban | PL_22 demand "23A" → 23 | with 23 the total matches `metadata.total_delivery_demand` (1440) | 5476.70 | 5043.00 |
+
+All 8 solutions (`solutions/*_clean_greedy.json`, `*_clean_ils.json`) pass the validator when it is
+run on the cleaned instance. Their `instance_id` ends in `_clean`.
 
 ## Validator vs our code
 

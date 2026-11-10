@@ -10,7 +10,7 @@ from instance_tools import InstanceError, load_instance  # noqa: E402
 # ====================================================================== choose here
 # 01_toy_2pl, 02_small_easy_8pl, 03_medium_35pl, 04_district_50pl, 05_suburban_52pl,
 # 06_micro_hubs_18ds, 07_regional_58pl, 08_legacy_crm_60pl, 09_urban_64pl, 10_metropolis_75pl
-INSTANCE = "06_micro_hubs_18ds"
+INSTANCE = "10_metropolis_75pl"
 
 
 class Infeasible(Exception):
@@ -25,7 +25,7 @@ class Solver:
         self.ready = {h: max(inst.open(inst.dp) + inst.tt(inst.dp, h), inst.open(h)) + inst.service(h)
                       for h in inst.hubs}
 
-    # ------------------------------------------------------------------ one van route
+    # one van route
     def load_ok(self, seq):
         """Capacity when leaving the hub and after every stop (pickups take space)."""
         start = sum(self.I.demand(c) for c in seq)
