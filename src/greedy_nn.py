@@ -10,7 +10,7 @@ from instance_tools import InstanceError, load_instance  # noqa: E402
 # ====================================================================== choose here
 # 01_toy_2pl, 02_small_easy_8pl, 03_medium_35pl, 04_district_50pl, 05_suburban_52pl,
 # 06_micro_hubs_18ds, 07_regional_58pl, 08_legacy_crm_60pl, 09_urban_64pl, 10_metropolis_75pl
-INSTANCE = "06_micro_hubs_18ds"
+INSTANCE = "10_metropolis_75pl"
 
 
 class Infeasible(Exception):
